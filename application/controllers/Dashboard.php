@@ -8,7 +8,7 @@ class Dashboard extends MY_Controller {
     }
 
     public function index(){
-        $data['tabTitle'] = "DIEZKA - Home";
+        $data['tabTitle'] = "Kaanti - Home";
         $data['pagecontent'] = "dashboard/dashboard";
         
         $this->loadpageintotemplate($data);

@@ -84,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         <noscript>
             <!--<meta http-equiv="Refresh" content="1; url=https://www.diezka.com.mx/Admin/index.php/Session/SinJava" />-->
-            <meta http-equiv="Refresh" content="1; url=http://localhost:8080/DIEZKA/index.php/Session/SinJava" />
+            <meta http-equiv="Refresh" content="1; url=http://localhost:8080/kaanti_web/index.php/Session/SinJava" />
         </noscript>
 
     </body>

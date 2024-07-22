@@ -8,7 +8,7 @@ class Productos extends MY_Controller {
     }
 
     public function index(){
-        $data['tabTitle'] = "DIEZKA - Productos";
+        $data['tabTitle'] = "Kaanti - Productos";
         $data['pagecontent'] = "productos/productos";
         $data['productos'] = $this->Query_Model->ListaProductos();
         

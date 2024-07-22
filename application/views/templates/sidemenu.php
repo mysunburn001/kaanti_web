@@ -46,6 +46,10 @@
                                 <a href="<?= base_url('index.php/Productos/');?>" class="waves-effect waves-light" id="clickcompany"><i class="fa fa-industry "></i><span>Productos</span> </a>
                             </li>
 
+                            <li class="has_sub" id="categories">
+                                <a href="<?= base_url('index.php/Categorias/');?>" class="waves-effect waves-light" id="clickcategory"><i class="fa fa-list-ul "></i><span>Categorias</span> </a>
+                            </li>
+
                             <!--<li class="has_sub" id="reports">
                                 <a href="#" class="waves-effect waves-light" ><i class="glyphicon glyphicon-list-alt"></i><span class=" fa fa-unsorted pull-right"></span><span>Reportes </span></a>
 

@@ -109,6 +109,39 @@ class Query_Model extends CI_Model{
 
 /* END - CONTROLLER: Productos */
 
+/* START - CONTROLLER: Categorias */
+
+        function ListaCategorias(){
+
+                $this->db->select('*');
+                $this->db->from('categorias');
+                $query = $this->db->get();
+                return $query->result();
+        }
+
+        function InsertaCategoria($DatosCategoria){
+
+                $this->db->insert("categorias",$DatosCategoria);  
+
+        }
+
+        function SeleccionaCategoriaPorID($IDCategoria){
+
+                $this->db->select('*');
+                $this->db->from('categorias');
+                $this->db->where('id_categoria',$IDCategoria);
+                $query = $this->db->get();
+                return $query->result();
+        }
+
+        function ActualizaCategoria($DatosCategoria,$IDCategoria){
+
+                $this->db->where('id_categoria',$IDCategoria);
+                $this->db->update("categorias",$DatosCategoria);
+        }
+
+/* END - CONTROLLER: Categorias */
+
 /* START - CONTROLLER: Reportes */
         
         public function SelectReport1FromDate($FromDate,$ToDate){

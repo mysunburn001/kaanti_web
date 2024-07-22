@@ -1037,26 +1037,26 @@ function EditaProductoS(){
                             closeOnConfirm: true,   
                             closeOnCancel: false 
                         }, function(isConfirm){ 
-                            $('#PreloaderUsuario').hide();
-                            $('#BotonEditaUsuario').removeAttr('disabled');       
+                            $('#PreloaderProducto').hide();
+                            $('#BotonEditaProducto').removeAttr('disabled');       
                         });
     
                     }else if(status.statusText=="Not Found"){
             
-                        $('#PreloaderUsuario').hide();
-                        $('#BotonEditaUsuario').removeAttr('disabled');
+                        $('#PreloaderProducto').hide();
+                        $('#BotonEditaProducto').removeAttr('disabled');
                         swal('Error',"La pagina que busca no existe" ,'error' );
             
                     }else if(status.statusText=="Internal Server Error"){
             
-                        $('#PreloaderUsuario').hide();
-                        $('#BotonEditaUsuario').removeAttr('disabled');
+                        $('#PreloaderProducto').hide();
+                        $('#BotonEditaProducto').removeAttr('disabled');
                         swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
             
                     }else{
             
-                        $('#PreloaderUsuario').hide();
-                        $('#BotonEditaUsuario').removeAttr('disabled');
+                        $('#PreloaderProducto').hide();
+                        $('#BotonEditaProducto').removeAttr('disabled');
                         swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
                     }
                 }
@@ -1126,26 +1126,26 @@ function EditaProductoS(){
                             closeOnConfirm: true,   
                             closeOnCancel: false 
                         }, function(isConfirm){ 
-                            $('#PreloaderUsuario').hide();
-                            $('#BotonEditaUsuario').removeAttr('disabled');       
+                            $('#PreloaderProducto').hide();
+                            $('#BotonEditaProducto').removeAttr('disabled');       
                         });
     
                     }else if(status.statusText=="Not Found"){
             
-                        $('#PreloaderUsuario').hide();
-                        $('#BotonEditaUsuario').removeAttr('disabled');
+                        $('#PreloaderProducto').hide();
+                        $('#BotonEditaProducto').removeAttr('disabled');
                         swal('Error',"La pagina que busca no existe" ,'error' );
             
                     }else if(status.statusText=="Internal Server Error"){
             
-                        $('#PreloaderUsuario').hide();
-                        $('#BotonEditaUsuario').removeAttr('disabled');
+                        $('#PreloaderProducto').hide();
+                        $('#BotonEditaProducto').removeAttr('disabled');
                         swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
             
                     }else{
             
-                        $('#PreloaderUsuario').hide();
-                        $('#BotonEditaUsuario').removeAttr('disabled');
+                        $('#PreloaderProducto').hide();
+                        $('#BotonEditaProducto').removeAttr('disabled');
                         swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
                     }
                 }
@@ -1276,6 +1276,267 @@ function BorraProductoS(IDProducto){
 
 
 /* END - CONTROLLER: Productos */
+
+
+/* START - CONTROLLER: Categorias */
+
+function VerificaContenidoCategoria(){
+
+    $("#PreloaderCategoria").show();
+    $("#BotonGuardaCategoria").attr('disabled',true);
+
+    var NombreCategoria = $("#NombreCategoria").val();
+    var DescripcionCategoria = $("#DescripcionCategoria").val();
+
+    if(NombreCategoria!="" && DescripcionCategoria!=""){
+
+       GuardaCategoriaS(); 
+
+    }else{
+
+        $('#PreloaderCategoria').hide();
+        $("#BotonGuardaCategoria").attr('disabled',false);
+        swal("Cuidado","Aun quedan campos vacios","warning");
+    }
+}
+
+function GuardaCategoriaS(){
+
+    var NombreCategoria = $("#NombreCategoria").val();
+    var DescripcionCategoria = $("#DescripcionCategoria").val();
+ 
+    $.ajax({
+        url:myBase_url+"index.php/Categorias/GuardaCategoriaC",
+        type:"POST",
+        data:{NombreCategoria:NombreCategoria,DescripcionCategoria:DescripcionCategoria},
+        async:true,
+        timeout: 15000,
+        success:function(datos){
+
+            var Cambio = "Guardar";
+            var Origen = "Categorias";
+            var Contenido = NombreCategoria;
+            GuardaCambioCategoria(Cambio,Origen,Contenido);
+
+            $('#PreloaderCategoria').hide();
+            $("#BotonGuardaCategoria").attr('disabled',false);
+
+            swal({   
+                title: "Exito",
+                text: "La categoria ha sido guardada exitosamente",   
+                type: "success",   
+                showCancelButton: false,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "OK",   
+                cancelButtonText: "Cancelar",   
+                closeOnConfirm: false,   
+                closeOnCancel: false 
+            }, function(isConfirm){ 
+                    location.href = "";       
+            }); 
+
+            
+        },error:function(status){
+
+            var CodigoError = status.status;
+            var DescripcionError = status.statusText;
+            var Origen = "GuardaCategoria"
+            GuardaErrorCategoria(CodigoError,DescripcionError,Origen);
+        
+            if (status.statusText=="timeout") {
+
+                swal({   
+                    title: "Error",
+                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                    type: "error",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: true,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                    $('#PreloaderCategoria').hide();  
+                    $("#BotonGuardaCategoria").attr('disabled',false);    
+                }); 
+
+            }else if(status.statusText=="Not Found"){
+    
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal('Error',"La pagina que busca no existe" ,'error' );
+    
+            }else if(status.statusText=="Internal Server Error"){
+    
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+    
+            }else{
+    
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+            }
+        }
+
+    });
+
+}
+
+function ConsultaDatosCategoriaS(IDCategoria){
+
+    $("#PreloaderCategoria").show();
+    $("#BotonGuardaCategoria").attr('disabled',true);
+
+    var IDCategoria = IDCategoria;
+
+    if(IDCategoria!=""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Categorias/ConsultaDatosCategoriaC",
+            type:"POST",
+            data:{IDCategoria:IDCategoria},
+            async:true,
+            success:function(datos){
+
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+
+                var Objeto = JSON.parse(datos);
+
+                var CategoriaID = Objeto[0].id_categoria;
+                var NombreCategoria = Objeto[0].nombre;
+                var DescripcionCategoria = Objeto[0].descripcion;
+                var FechaRegistro = Objeto[0].fecha_registro;
+                var UsuarioRegistro = Objeto[0].usuario_registro;
+                var EstadoCategoria = Objeto[0].estado;
+
+                $("#IDOculto").val(CategoriaID);
+                $("#NombreCategoria").val(NombreCategoria);
+                $("#DescripcionCategoria").val(DescripcionCategoria);
+                $("#FechaRegistro").val(FechaRegistro);
+                $("#UsuarioRegistro").val(UsuarioRegistro);
+                $("#EstadoCategoria").val(EstadoCategoria);
+
+                $("#EstadoEscondido").show();
+                $("#BotonGuardaCategoria").hide();
+                $("#BotonEditaCategoria").show();
+
+            },error:function(){
+
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal("Error","Ha ocurrido un error interno del servidor, porfavor intentelo de nuevo","error");
+            }
+
+        });
+    }
+}
+
+function EditaCategoriaS(){
+
+    $('#PreloaderCategoria').show();
+    $("#BotonEditaCategoria").attr('disabled',true);
+
+    var IDCategoria = $("#IDOculto").val();
+    var NombreCategoria = $("#NombreCategoria").val();
+    var DescripcionCategoria = $("#DescripcionCategoria").val();
+    var FechaRegistro = $("#FechaRegistro").val();
+    var UsuarioRegistro = $("#UsuarioRegistro").val();
+    var EstadoCategoria = $("#EstadoCategoria").val();
+
+    if(IDCategoria != "" && NombreCategoria!="" && DescripcionCategoria!="" && FechaRegistro != "" && UsuarioRegistro != "" && EstadoCategoria != ""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Categorias/EditaCategoriaC",
+            type:"POST",
+            data:{IDCategoria:IDCategoria,NombreCategoria:NombreCategoria,DescripcionCategoria:DescripcionCategoria,FechaRegistro:FechaRegistro,UsuarioRegistro:UsuarioRegistro,EstadoCategoria:EstadoCategoria},
+            async:true,
+            success:function(datos){
+
+                var Cambio = "Editar";
+                var Origen = "Categorias";
+                var Contenido = NombreCategoria;
+                GuardaCambioCategoria(Cambio,Origen,Contenido);
+
+                $('#PreloaderCategoria').hide();
+                $("#BotonEditaCategoria").attr('disabled',false);
+
+                swal({   
+                    title: "Exito",
+                    text: "La categoria ha sido actualizado exitosamente",   
+                    type: "success",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: false,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                        location.href = "";       
+                }); 
+
+                
+            },error:function(status){
+
+                var CodigoError = status.status;
+                var DescripcionError = status.statusText;
+                var Origen = "EditaCategoria"
+                GuardaErrorCategoria(CodigoError,DescripcionError,Origen);
+            
+                if (status.statusText=="timeout") {
+
+                    swal({   
+                        title: "Error",
+                        text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                        type: "error",   
+                        showCancelButton: false,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "OK",   
+                        cancelButtonText: "Cancelar",   
+                        closeOnConfirm: true,   
+                        closeOnCancel: false 
+                    }, function(isConfirm){ 
+                        $('#PreloaderCategoria').hide();
+                        $('#BotonEditaCategoria').removeAttr('disabled');       
+                    });
+
+                }else if(status.statusText=="Not Found"){
+        
+                    $('#PreloaderCategoria').hide();
+                    $('#BotonEditaCategoria').removeAttr('disabled');
+                    swal('Error',"La pagina que busca no existe" ,'error' );
+        
+                }else if(status.statusText=="Internal Server Error"){
+        
+                    $('#PreloaderCategoria').hide();
+                    $('#BotonEditaCategoria').removeAttr('disabled');
+                    swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+        
+                }else{
+        
+                    $('#PreloaderCategoria').hide();
+                    $('#BotonEditaCategoria').removeAttr('disabled');
+                    swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+                }
+            }
+
+        });
+
+    }else{
+
+        $('#PreloaderCategoria').hide();
+        $("#BotonEditaCategoria").attr('disabled',false);
+        swal("Cuidado","Aun hay campos vacios","warning");
+    }
+        
+    
+    
+}
+
+
+/* END - CONTROLLER: Categorias */
 
 /* =============================================================================================================================================================================================================================== */
 
@@ -1516,6 +1777,38 @@ function GuardaErrorProducto(CodigoError,DescripcionError,Origen){
 
     $.ajax({
         url:myBase_url+"index.php/Productos/GuardaErrorPC",
+        type:'POST',
+        data:{CodigoError:CodigoError,DescripcionError:DescripcionError,Origen:Origen},
+        async: true,
+        success:function(datos){
+
+        },error:function(datos){
+
+        }
+
+    });
+}
+
+function GuardaCambioCategoria(Cambio,Origen,Contenido){
+
+    $.ajax({
+        url:myBase_url+"index.php/Categorias/GuardaCambioCC",
+        type:'POST',
+        data:{Cambio:Cambio,Origen:Origen,Contenido:Contenido},
+        async: true,
+        success:function(datos){
+
+        },error:function(datos){
+
+        }
+
+    });
+}
+
+function GuardaErrorCategoria(CodigoError,DescripcionError,Origen){
+
+    $.ajax({
+        url:myBase_url+"index.php/Categorias/GuardaErrorCC",
         type:'POST',
         data:{CodigoError:CodigoError,DescripcionError:DescripcionError,Origen:Origen},
         async: true,

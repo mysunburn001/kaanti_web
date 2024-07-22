@@ -8,7 +8,7 @@ class Usuarios extends MY_Controller {
     }
 
     public function index(){
-        $data['tabTitle'] = "Diezka - Usuarios";
+        $data['tabTitle'] = "Kaanti - Usuarios";
         $data['pagecontent'] = "usuarios/usuarios";
         $data['usuarios'] = $this->Query_Model->ListaUsuarios();
         
