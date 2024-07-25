@@ -34,10 +34,9 @@
         $(document).ready(function() {
 
             $("#EstadoEscondido").hide();
-            $("#BotonEditaProducto").hide();
+            $("#BotonEditaCliente").hide();
 
         });
-
 
     </script>
 
@@ -70,7 +69,7 @@
                          <div class="col-lg-12">
                           <div class="panel panel-border panel-info">
                               <div class="panel-heading">
-                                  <h3 class="panel-title">Productos</h3>
+                                  <h3 class="panel-title">Clientes</h3>
                               </div>
                               <div class="table-responsive">
                                 <div class="panel-body">
@@ -92,54 +91,54 @@
                                             <!-- form beggins -->
 
                                             <div class="form-group">
-                                                <label for="NombreProducto">Nombre</label>
+                                                <label for="NombreCliente">Nombre(s)</label>
                                                 <br>
                                                 <input type="text" id="IDOculto" hidden>
-                                                <input type="text" id="ClaveProducto" hidden>
-                                                <input type="text" id="FechaRegistro" hidden>
-                                                <input type="text" id="UsuarioRegistro" hidden>
-                                                <input type="text" name="NombreProducto" placeholder="Nombre" id="NombreProducto" class="form-control">
+                                                <input type="text" name="NombreCliente" placeholder="Nombre(s)" id="NombreCliente" class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="DescripcionProducto">Descripcion</label>
+                                                <label for="ApPaternoCliente">Apellido Paterno</label>
                                                 <br>
-                                                <input type="text" name="DescripcionProducto" placeholder="Descripcion" id="DescripcionProducto" class="form-control">
+                                                <input type="text" name="ApPaternoCliente" placeholder="Apellido Paterno" id="ApPaternoCliente" class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="PrecioProducto">Precio</label>
+                                                <label for="ApMaternoCliente">Apellido Materno</label>
                                                 <br>
-                                                <input type="text" name="PrecioProducto" placeholder="Precio" id="PrecioProducto" class="form-control" onKeyPress="if (event.keyCode < 48 || event.keyCode > 57)event.returnValue = false;">
+                                                <input type="text" name="ApMaternoCliente" placeholder="Apellido Materno" id="ApMaternoCliente" class="form-control">
                                             </div>
-                                      
-                                            <div class="form-group">       
-                                              <label for="CategoriaProducto">Categoria</label>                                           
-                                              <select id="CategoriaProducto" name="CategoriaProducto" class="form-control">
-                                                <option value="" >Elije Categoria</option>
 
+                                            <div class="form-group">
+                                                <label for="TelefonoCliente">Telefono</label>
+                                                <br>
+                                                <input type="text" name="TelefonoCliente" placeholder="Telefono" id="TelefonoCliente" class="form-control" onKeyPress="if (event.keyCode < 48 || event.keyCode > 57)event.returnValue = false;" onblur="RevisaTelefonoCliente()">
+                                            </div>
 
-                                                <?php
+                                            <div class="form-group">
+                                                <label for="CorreoCliente">Correo</label>
+                                                <br>
+                                                <input type="text" name="CorreoCliente" placeholder="Correo" id="CorreoCliente" class="form-control" onblur="RevisaCorreoCliente()">
+                                            </div>
 
-                                                  $valores = count($categorias);
-                                                  for ($i=0; $i < $valores ; $i++) { 
-                                                    $res = $categorias[$i];
-                                                    $id = $res -> id_categoria;
-                                                    $nombre = $res -> nombre;
+                                            <div class="form-group">
+                                                <label for="NCliente">Usuario</label>
+                                                <br>
+                                                <input type="text" name="NCliente" placeholder="Usuario" id="NCliente" class="form-control" onblur="RevisaClienteExistenteS()">
+                                            </div>
 
-                                                    echo "<option value='$id'>$nombre</option>";
-                                                  }
-                                                  ?>
-                                                                                
-                                              </select>
-                                            </div> 
-                               
+                                            <div class="form-group">
+                                                <label for="PasswordCliente">Password</label>
+                                                <br>
+                                                <input type="password" name="PasswordCliente" placeholder="Contraseña" id="PasswordCliente" class="form-control">
+                                            </div>
+
                                              <div class="form-group" id="EstadoEscondido">
-                                                  <label for="EstadoProducto">Estado</label>
-                                                  <select id="EstadoProducto" name="EstadoProducto" class="form-control">
+                                                  <label for="EstadoCliente">Estado</label>
+                                                  <select id="EstadoCliente" name="EstadoCliente" class="form-control">
                                                   <option value="" >Elije Estado</option>
                                                     
-                                                    <option value="1"> Activo </option>
+                                                    <option value="1"> Activo</option>
                                                     <option value="0"> Inactivo </option>
                                                   
 
@@ -147,15 +146,15 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <div id="PreloaderProducto" hidden="true" align="center">
+                                                <div id="PreloaderCliente" hidden="true" align="center">
                                                     
                                                     <img src="<?php echo base_url('assets/myapp/img/preloader2.gif'); ?>" alt="validando...">
                                                 </div>
                                             </div>
 
-                                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light" onclick="VerificaContenidoProducto()" id="BotonGuardaProducto">Guardar</button> 
+                                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light" onclick="VerificaContenidoCliente()" id="BotonGuardaCliente">Guardar</button> 
 
-                                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light" onclick="EditaProductoS()" id="BotonEditaProducto">Editar</button> 
+                                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light" onclick="EditaClienteS()" id="BotonEditaCliente">Editar</button> 
                                             
                                             <!-- form ends -->         
                                         </div>
@@ -168,7 +167,7 @@
                                 <div class="col-lg-8">
                                   <div class="panel panel-border panel-info">
                                       <div class="panel-heading">
-                                          <h3 class="panel-title">Lista Productos</h3>
+                                          <h3 class="panel-title">Lista Clientes</h3>
                                       </div>
                                       <div class="table-responsive">
                                         <div class="panel-body">
@@ -176,8 +175,8 @@
                                             <thead>
                                               <tr>
                                                 <th>Nombre</th>
-                                                <th>Descripcion</th>
-                                                <th>Precio</th>
+                                                <th>Telefono</th>
+                                                <th>Correo</th>
                                                 <th>Estado</th>
                                                 <th>Editar</th>
                                                 <th>Borrar</th>
@@ -188,20 +187,25 @@
                                               
                                               <?php
 
-                                              $values = count($productos);
+                                              $values = count($clientes);
                                               for ($i=0; $i < $values ; $i++) { 
-                                                $res = $productos[$i];
-                                                $id_producto = $res -> id_producto;
+                                                $res = $clientes[$i];
+                                                $id_cliente = $res -> id_cliente;
                                                 $nombre = $res -> nombre;
-                                                $descripcion = $res -> descripcion;
-                                                $precio = $res -> precio;
+                                                $apaterno = $res -> apaterno;
+                                                $amaterno = $res -> amaterno;
+                                                $telefono = $res -> telefono;
+                                                $email = $res -> email; 
                                                 $estado = $res -> estado;
+
+                                                $nombre_completo = $nombre .' ' .$apaterno. ' ' .$amaterno; 
 
                                                 echo "
                                                 <tr>
-                                                  <td>$nombre</td>
-                                                  <td>$descripcion</td>
-                                                  <td>$precio</td>";
+                                                  <td>$nombre_completo</td>
+                                                  <td>$telefono</td>
+                                                  <td>$email</td>
+                                                  <td>$ocupacion</td>";
 
                                                   if ($estado == 1) {
                                                     echo "<td><span class='label label-success'>Activo</span></td>";
@@ -210,11 +214,11 @@
                                                   }
 
                                                   echo "<td>";
-                                                  echo "<a href='#' id='Edit' onclick='ConsultaDatosProductoS($id_producto)'><i class='fa fa-pencil'></i> </a>
+                                                  echo "<a href='#' id='Edit' onclick='ConsultaDatosClienteS($id_cliente)'><i class='fa fa-pencil'></i> </a>
                                                   </td>";
 
                                                   echo "<td>";
-                                                  echo "<a href='#' id='Delete' onclick='BorraProductoS($id_producto)'><i class='md md-close'></i> </a>
+                                                  echo "<a href='#' id='Delete' onclick='BorraClienteS($id_cliente)'><i class='md md-close'></i> </a>
                                                   </td>";
 
                                               echo "</tr>";

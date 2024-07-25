@@ -8,58 +8,20 @@ class Query_Model extends CI_Model{
 
 /* END - CONTROLLER: Dashboard */
 
+
+/* START - CONTROLLER: Citas */
+
+function ListaClientes(){
+
+        $this->db->select('*');
+        $this->db->from('clientes');
+        $query = $this->db->get();
+        return $query->result();
+}
+
+/* END - CONTROLLER: Citas */
+
 /* =============================================================================================================================================================================================================================== */
-
-/* START - CONTROLLER: Usuarios */
-
-        function ListaUsuarios(){
-
-                $this->db->select('*');
-                $this->db->from('usuarios');
-                $this->db->where("(rol= 'A' OR rol = 'E')",NULL,FALSE);
-                $query = $this->db->get();
-                return $query->result();  
-        }
-
-        function SeleccionaPorUsuario($NombreUsuario){
-
-                $this->db->select('*');
-                $this->db->from('usuarios');
-                $this->db->where('username',$NombreUsuario);
-                $query = $this->db->get();
-                return $query->result();
-
-        } 
-
-        function InsertaUsuario($DatosUsuario){
-
-                $this->db->insert("usuarios",$DatosUsuario);
-        }
-
-        function SeleccionaUsuarioPorID($IDUsuario){
-
-                $this->db->select('*');
-                $this->db->from('usuarios');
-                $this->db->where('id_usuario',$IDUsuario);
-                $query = $this->db->get();
-                return $query->result();
-        }
-
-        function ActualizaUsuario($DatosUsuario,$IDUsuario){
-
-                $this->db->where('id_usuario',$IDUsuario);
-                $this->db->update("usuarios",$DatosUsuario);
-
-        }
-
-        function BorraUsuarioBD($IDUsuario){
-
-                $this->db->where('id_usuario',$IDUsuario);
-                $this->db->set("estado",'0');
-                $this->db->update("usuarios");
-        }
-
-/* END - CONTROLLER: Usuarios */
 
 /* START - CONTROLLER: Productos */
 
@@ -119,6 +81,15 @@ class Query_Model extends CI_Model{
                 return $query->result();
         }
 
+        function ListaCategoriasActivas(){
+
+                $this->db->select('*');
+                $this->db->from('categorias');
+                $this->db->where('estado','1');
+                $query = $this->db->get();
+                return $query->result();
+        }
+
         function InsertaCategoria($DatosCategoria){
 
                 $this->db->insert("categorias",$DatosCategoria);  
@@ -140,6 +111,13 @@ class Query_Model extends CI_Model{
                 $this->db->update("categorias",$DatosCategoria);
         }
 
+        function BorraCategoriaBD($IDCategoria){
+
+                $this->db->where('id_categoria',$IDCategoria);
+                $this->db->set("estado",'0');
+                $this->db->update("categorias");
+        }
+
 /* END - CONTROLLER: Categorias */
 
 /* START - CONTROLLER: Reportes */
@@ -153,6 +131,57 @@ class Query_Model extends CI_Model{
 
 
 /* END - CONTROLLER: Reportes */
+
+/* START - CONTROLLER: Usuarios */
+
+function ListaUsuarios(){
+
+        $this->db->select('*');
+        $this->db->from('usuarios');
+        $this->db->where("(rol= 'A' OR rol = 'E')",NULL,FALSE);
+        $query = $this->db->get();
+        return $query->result();  
+}
+
+function SeleccionaPorUsuario($NombreUsuario){
+
+        $this->db->select('*');
+        $this->db->from('usuarios');
+        $this->db->where('username',$NombreUsuario);
+        $query = $this->db->get();
+        return $query->result();
+
+} 
+
+function InsertaUsuario($DatosUsuario){
+
+        $this->db->insert("usuarios",$DatosUsuario);
+}
+
+function SeleccionaUsuarioPorID($IDUsuario){
+
+        $this->db->select('*');
+        $this->db->from('usuarios');
+        $this->db->where('id_usuario',$IDUsuario);
+        $query = $this->db->get();
+        return $query->result();
+}
+
+function ActualizaUsuario($DatosUsuario,$IDUsuario){
+
+        $this->db->where('id_usuario',$IDUsuario);
+        $this->db->update("usuarios",$DatosUsuario);
+
+}
+
+function BorraUsuarioBD($IDUsuario){
+
+        $this->db->where('id_usuario',$IDUsuario);
+        $this->db->set("estado",'0');
+        $this->db->update("usuarios");
+}
+
+/* END - CONTROLLER: Usuarios */
 
 /* START - CONTROLLER: ErrorLog/ChangeLog */
 

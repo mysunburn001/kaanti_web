@@ -291,6 +291,1022 @@ function CheckUActivo(){
 
 /* END - CONTROLLER: Session */
 
+/* START - CONTROLLER: Dashboard */
+
+function RellenaDatosDiaMes(fecha){
+
+    $("#tablahorarios").empty();
+    $("#tablahorariosreal").empty();
+
+    var fecha = fecha;
+
+    $("#custom-width-modal").modal();
+
+    /*if(fecha!= ""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Calendario/TotalCitas",
+            type:'POST',
+            data:{fecha:fecha},
+            async: true,
+            success:function(datos){
+
+                var obj = JSON.parse(datos);
+
+                var fechacompleta = "Detalles del dia : " + fecha;
+                $("#custom-width-modalLabel").html(fechacompleta);
+
+                if (obj.tentativo!="" || obj.real!="") {  
+
+                    for (var i = 0; i < obj.tentativo.length; i++) {
+
+                        var nombret = obj.tentativo[i].nombre_t;
+                        var tpaterno = obj.tentativo[i].t_paterno;
+                        var tmaterno = obj.tentativo[i].t_materno;
+        
+                        var nombrep = obj.tentativo[i].nombre_p;
+                        var ppaterno = obj.tentativo[i].p_paterno;
+                        var pmaterno = obj.tentativo[i].p_materno;
+
+                        var hora = obj.tentativo[i].hora_sesion;
+
+                        var nombrecompleto_t = nombret + ' ' + tpaterno + ' ' + tmaterno;
+                        var nombrecompleto_p = nombrep + ' ' + ppaterno + ' ' + pmaterno; 
+                        
+                        $("#tablahorarios").append("<tr><td>"+nombrecompleto_t+"</td><td>"+nombrecompleto_p+"</td><td>"+hora+"</td></tr>");
+                        
+
+                    }
+
+                    for (var i = 0; i < obj.real.length; i++) {
+
+                        var nombret = obj.real[i].nombre_t;
+                        var tpaterno = obj.real[i].t_paterno;
+                        var tmaterno = obj.real[i].t_materno;
+        
+                        var nombrep = obj.real[i].nombre_p;
+                        var ppaterno = obj.real[i].p_paterno;
+                        var pmaterno = obj.real[i].p_materno;
+
+                        var hora = obj.real[i].hora_sesion;
+
+                        var nombrecompleto_t = nombret + ' ' + tpaterno + ' ' + tmaterno;
+                        var nombrecompleto_p = nombrep + ' ' + ppaterno + ' ' + pmaterno; 
+                        
+                        $("#tablahorariosreal").append("<tr><td>"+nombrecompleto_t+"</td><td>"+nombrecompleto_p+"</td><td>"+hora+"</td></tr>");
+                        
+
+                    }
+
+                    $("#custom-width-modal").modal();
+
+                }else{
+
+                    swal("Error","No existen datos para esta fecha","error");
+                }
+
+            },
+
+            error:function(){
+                swal("Error","Ha ocurrido un error intentelo de nuevo","error");
+            }
+
+        });
+
+    }*/
+
+}
+
+/* END - CONTROLLER: Dashboard */
+
+/* =============================================================================================================================================================================================================================== */
+
+/* START - CONTROLLER: Citas */
+
+/* END - CONTROLLER: Citas */
+
+/* =============================================================================================================================================================================================================================== */
+
+/* START - CONTROLLER: Productos */
+
+function VerificaContenidoProducto(){
+
+    $("#PreloaderProducto").show();
+    $("#BotonGuardaProducto").attr('disabled',true);
+
+    var NombreProducto = $("#NombreProducto").val();
+    var DescripcionProducto = $("#DescripcionProducto").val();
+    var PrecioProducto = $("#PrecioProducto").val();
+    var CategoriaProducto = $("#CategoriaProducto").val();
+
+    if(NombreProducto!="" && DescripcionProducto!="" && PrecioProducto!="" && CategoriaProducto!=""){
+
+       GuardaProductoS(); 
+
+    }else{
+
+        $('#PreloaderProducto').hide();
+        $("#BotonGuardaProducto").attr('disabled',false);
+        swal("Cuidado","Aun quedan campos vacios","warning");
+    }
+}
+
+function GuardaProductoS(){
+
+    var NombreProducto = $("#NombreProducto").val();
+    var DescripcionProducto = $("#DescripcionProducto").val();
+    var PrecioProducto = $("#PrecioProducto").val();
+    var CategoriaProducto = $("#CategoriaProducto").val();
+
+    $.ajax({
+        url:myBase_url+"index.php/Productos/GuardaProductoC",
+        type:"POST",
+        data:{NombreProducto:NombreProducto,DescripcionProducto:DescripcionProducto,PrecioProducto:PrecioProducto,CategoriaProducto:CategoriaProducto},
+        async:true,
+        timeout: 15000,
+        success:function(datos){
+
+            var Cambio = "Guardar";
+            var Origen = "Productos";
+            var Contenido = NombreProducto;
+            GuardaCambioProducto(Cambio,Origen,Contenido);
+
+            $('#PreloaderProducto').hide();
+            $("#BotonGuardaProducto").attr('disabled',false);
+
+            swal({   
+                title: "Exito",
+                text: "El producto ha sido guardado exitosamente",   
+                type: "success",   
+                showCancelButton: false,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "OK",   
+                cancelButtonText: "Cancelar",   
+                closeOnConfirm: false,   
+                closeOnCancel: false 
+            }, function(isConfirm){ 
+                    location.href = "";       
+            }); 
+
+            
+        },error:function(status){
+
+            var CodigoError = status.status;
+            var DescripcionError = status.statusText;
+            var Origen = "GuardaProducto"
+            GuardaErrorProducto(CodigoError,DescripcionError,Origen);
+        
+            if (status.statusText=="timeout") {
+
+                swal({   
+                    title: "Error",
+                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                    type: "error",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: true,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                    $('#PreloaderProducto').hide();  
+                    $("#BotonGuardaProducto").attr('disabled',false);    
+                }); 
+
+            }else if(status.statusText=="Not Found"){
+    
+                $('#PreloaderProducto').hide();
+                $("#BotonGuardaProducto").attr('disabled',false);
+                swal('Error',"La pagina que busca no existe" ,'error' );
+    
+            }else if(status.statusText=="Internal Server Error"){
+    
+                $('#PreloaderProducto').hide();
+                $("#BotonGuardaProducto").attr('disabled',false);
+                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+    
+            }else{
+    
+                $('#PreloaderProducto').hide();
+                $("#BotonGuardaProducto").attr('disabled',false);
+                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+            }
+        }
+
+    });
+
+}
+
+function ConsultaDatosProductoS(IDProducto){
+
+    $("#PreloaderProducto").show();
+    $("#BotonGuardaProducto").attr('disabled',true);
+
+    var IDProducto = IDProducto;
+
+    if(IDProducto!=""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Productos/ConsultaDatosProductoC",
+            type:"POST",
+            data:{IDProducto:IDProducto},
+            async:true,
+            success:function(datos){
+
+                $('#PreloaderProducto').hide();
+                $("#BotonGuardaProducto").attr('disabled',false);
+
+                var Objeto = JSON.parse(datos);
+
+                var ProductoID = Objeto[0].id_producto;
+                var NombreProducto = Objeto[0].nombre;
+                var DescripcionProducto = Objeto[0].descripcion;
+                var ClaveProducto = Objeto[0].clave;
+                var PrecioProducto = Objeto[0].precio;
+                var CategoriaProducto = Objeto[0].categoria;
+                var FechaRegistro = Objeto[0].fecha_registro;
+                var UsuarioRegistro = Objeto[0].usuario_registro;
+                var EstadoProducto = Objeto[0].estado;
+
+                $("#IDOculto").val(ProductoID);
+                $("#NombreProducto").val(NombreProducto);
+                $("#DescripcionProducto").val(DescripcionProducto);
+                $("#ClaveProducto").val(ClaveProducto);
+                $("#PrecioProducto").val(PrecioProducto);
+                $("#CategoriaProducto").val(CategoriaProducto);
+                $("#FechaRegistro").val(FechaRegistro);
+                $("#UsuarioRegistro").val(UsuarioRegistro);
+                $("#EstadoProducto").val(EstadoProducto);
+
+                $("#EstadoEscondido").show();
+                $("#BotonGuardaProducto").hide();
+                $("#BotonEditaProducto").show();
+
+            },error:function(){
+
+                $('#PreloaderProducto').hide();
+                $("#BotonGuardaProducto").attr('disabled',false);
+                swal("Error","Ha ocurrido un error interno del servidor, porfavor intentelo de nuevo","error");
+            }
+
+        });
+    }
+}
+
+function EditaProductoS(){
+
+    $('#PreloaderProducto').show();
+    $("#BotonEditaProducto").attr('disabled',true);
+
+    var IDProducto = $("#IDOculto").val();
+    var NombreProducto = $("#NombreProducto").val();
+    var DescripcionProducto = $("#DescripcionProducto").val();
+    var ClaveProducto = $("#ClaveProducto").val();
+    var PrecioProducto = $("#PrecioProducto").val();
+    var CategoriaProducto = $("#CategoriaProducto").val();
+    var FechaRegistro = $("#FechaRegistro").val();
+    var UsuarioRegistro = $("#UsuarioRegistro").val();
+    var EstadoProducto = $("#EstadoProducto").val();
+        
+    if(IDProducto != "" && NombreProducto!="" && DescripcionProducto!="" && ClaveProducto!="" && PrecioProducto != "" && CategoriaProducto != "" && FechaRegistro != "" && UsuarioRegistro != "" && EstadoProducto != ""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Productos/EditaProductoC",
+            type:"POST",
+            data:{IDProducto:IDProducto,NombreProducto:NombreProducto,DescripcionProducto:DescripcionProducto,ClaveProducto:ClaveProducto,PrecioProducto:PrecioProducto,CategoriaProducto:CategoriaProducto,FechaRegistro:FechaRegistro,UsuarioRegistro:UsuarioRegistro,EstadoProducto:EstadoProducto},
+            async:true,
+            success:function(datos){
+
+                var Cambio = "Editar";
+                var Origen = "Productos";
+                var Contenido = NombreProducto;
+                GuardaCambioProducto(Cambio,Origen,Contenido);
+
+                $('#PreloaderProducto').hide();
+                $("#BotonEditaProducto").attr('disabled',false);
+
+                swal({   
+                    title: "Exito",
+                    text: "El producto ha sido actualizado exitosamente",   
+                    type: "success",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: false,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                        location.href = "";       
+                }); 
+
+                
+            },error:function(status){
+
+                var CodigoError = status.status;
+                var DescripcionError = status.statusText;
+                var Origen = "EditaProducto"
+                GuardaErrorProducto(CodigoError,DescripcionError,Origen);
+            
+                if (status.statusText=="timeout") {
+
+                    swal({   
+                        title: "Error",
+                        text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                        type: "error",   
+                        showCancelButton: false,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "OK",   
+                        cancelButtonText: "Cancelar",   
+                        closeOnConfirm: true,   
+                        closeOnCancel: false 
+                    }, function(isConfirm){ 
+                        $('#PreloaderProducto').hide();
+                        $('#BotonEditaProducto').removeAttr('disabled');       
+                    });
+
+                }else if(status.statusText=="Not Found"){
+        
+                    $('#PreloaderProducto').hide();
+                    $('#BotonEditaProducto').removeAttr('disabled');
+                    swal('Error',"La pagina que busca no existe" ,'error' );
+        
+                }else if(status.statusText=="Internal Server Error"){
+        
+                    $('#PreloaderProducto').hide();
+                    $('#BotonEditaProducto').removeAttr('disabled');
+                    swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+        
+                }else{
+        
+                    $('#PreloaderProducto').hide();
+                    $('#BotonEditaProducto').removeAttr('disabled');
+                    swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+                }
+            }
+
+        });
+
+    }else{
+
+        $('#PreloaderProducto').hide();
+        $("#BotonEditaProducto").attr('disabled',false);
+        swal("Cuidado","Aun hay campos vacios","warning");
+    }    
+    
+}
+
+function BorraProductoS(IDProducto){
+
+    $('#PreloaderProducto').show();
+
+    var Delay = 500;
+    var IDProducto = IDProducto;
+
+    if(IDProducto!=""){
+
+        swal({   
+            title: "Cuidado",
+            text: "Estas seguro de borrar este producto?",   
+            type: "warning",   
+            showCancelButton: true,   
+            confirmButtonColor: "#DD6B55",   
+            confirmButtonText: "OK",   
+            cancelButtonText: "Cancel",   
+            closeOnConfirm: true,   
+            closeOnCancel: true 
+        }, function(isConfirm){ 
+
+            if (isConfirm==true) {
+
+                $.ajax({
+                    url:myBase_url+"index.php/Productos/BorraProductoC",
+                    type:"POST",
+                    data:{IDProducto:IDProducto},
+                    async:true,
+                    success:function(datos){
+
+                        $('#PreloaderProducto').hide();
+
+                        var Objeto = JSON.parse(datos);
+                        var ClaveProducto = Objeto;
+
+                        var Cambio = "Borrar";
+                        var Origen = "Productos";
+                        var Contenido = ClaveProducto;
+                        GuardaCambioProducto(Cambio,Origen,Contenido);
+
+                        setTimeout(function() {
+
+                            swal({   
+                                title: "Exito",
+                                text: "El producto ha sido borrado exitosamente",   
+                                type: "success",   
+                                showCancelButton: false,   
+                                confirmButtonColor: "#DD6B55",   
+                                confirmButtonText: "OK",   
+                                cancelButtonText: "Cancel",   
+                                closeOnConfirm: false,   
+                                closeOnCancel: false 
+                            }, function(isConfirm){ 
+                                    location.href = "";       
+                            });
+
+                        }, Delay);
+                        
+                    },error:function(status){
+
+                        var CodigoError = status.status;
+                        var DescripcionError = status.statusText;
+                        var Origen = "BorraProducto"
+                        GuardaErrorProducto(CodigoError,DescripcionError,Origen);
+
+                        setTimeout(function() {
+
+                            if (status.statusText=="timeout") {
+
+                                swal({   
+                                    title: "Error",
+                                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                                    type: "error",   
+                                    showCancelButton: false,   
+                                    confirmButtonColor: "#DD6B55",   
+                                    confirmButtonText: "OK",   
+                                    cancelButtonText: "Cancelar",   
+                                    closeOnConfirm: true,   
+                                    closeOnCancel: false 
+                                }, function(isConfirm){ 
+                                    $('#PreloaderProducto').hide();      
+                                }); 
+            
+                            }else if(status.statusText=="Not Found"){
+                    
+                                $('#PreloaderProducto').hide();
+                                swal('Error',"La pagina que busca no existe" ,'error' );
+                    
+                            }else if(status.statusText=="Internal Server Error"){
+                    
+                                $('#PreloaderProducto').hide();
+                                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+                    
+                            }else{
+                    
+                                $('#PreloaderProducto').hide();
+                                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+                            }
+
+                        }, Delay);
+                    }
+
+                });
+            }
+                      
+        });
+
+        
+    }
+
+}
+
+
+/* END - CONTROLLER: Productos */
+
+
+/* START - CONTROLLER: Categorias */
+
+function VerificaContenidoCategoria(){
+
+    $("#PreloaderCategoria").show();
+    $("#BotonGuardaCategoria").attr('disabled',true);
+
+    var NombreCategoria = $("#NombreCategoria").val();
+    var DescripcionCategoria = $("#DescripcionCategoria").val();
+
+    if(NombreCategoria!="" && DescripcionCategoria!=""){
+
+       GuardaCategoriaS(); 
+
+    }else{
+
+        $('#PreloaderCategoria').hide();
+        $("#BotonGuardaCategoria").attr('disabled',false);
+        swal("Cuidado","Aun quedan campos vacios","warning");
+    }
+}
+
+function GuardaCategoriaS(){
+
+    var NombreCategoria = $("#NombreCategoria").val();
+    var DescripcionCategoria = $("#DescripcionCategoria").val();
+ 
+    $.ajax({
+        url:myBase_url+"index.php/Categorias/GuardaCategoriaC",
+        type:"POST",
+        data:{NombreCategoria:NombreCategoria,DescripcionCategoria:DescripcionCategoria},
+        async:true,
+        timeout: 15000,
+        success:function(datos){
+
+            var Cambio = "Guardar";
+            var Origen = "Categorias";
+            var Contenido = NombreCategoria;
+            GuardaCambioCategoria(Cambio,Origen,Contenido);
+
+            $('#PreloaderCategoria').hide();
+            $("#BotonGuardaCategoria").attr('disabled',false);
+
+            swal({   
+                title: "Exito",
+                text: "La categoria ha sido guardada exitosamente",   
+                type: "success",   
+                showCancelButton: false,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "OK",   
+                cancelButtonText: "Cancelar",   
+                closeOnConfirm: false,   
+                closeOnCancel: false 
+            }, function(isConfirm){ 
+                    location.href = "";       
+            }); 
+
+            
+        },error:function(status){
+
+            var CodigoError = status.status;
+            var DescripcionError = status.statusText;
+            var Origen = "GuardaCategoria"
+            GuardaErrorCategoria(CodigoError,DescripcionError,Origen);
+        
+            if (status.statusText=="timeout") {
+
+                swal({   
+                    title: "Error",
+                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                    type: "error",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: true,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                    $('#PreloaderCategoria').hide();  
+                    $("#BotonGuardaCategoria").attr('disabled',false);    
+                }); 
+
+            }else if(status.statusText=="Not Found"){
+    
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal('Error',"La pagina que busca no existe" ,'error' );
+    
+            }else if(status.statusText=="Internal Server Error"){
+    
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+    
+            }else{
+    
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+            }
+        }
+
+    });
+
+}
+
+function ConsultaDatosCategoriaS(IDCategoria){
+
+    $("#PreloaderCategoria").show();
+    $("#BotonGuardaCategoria").attr('disabled',true);
+
+    var IDCategoria = IDCategoria;
+
+    if(IDCategoria!=""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Categorias/ConsultaDatosCategoriaC",
+            type:"POST",
+            data:{IDCategoria:IDCategoria},
+            async:true,
+            success:function(datos){
+
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+
+                var Objeto = JSON.parse(datos);
+
+                var CategoriaID = Objeto[0].id_categoria;
+                var NombreCategoria = Objeto[0].nombre;
+                var DescripcionCategoria = Objeto[0].descripcion;
+                var FechaRegistro = Objeto[0].fecha_registro;
+                var UsuarioRegistro = Objeto[0].usuario_registro;
+                var EstadoCategoria = Objeto[0].estado;
+
+                $("#IDOculto").val(CategoriaID);
+                $("#NombreCategoria").val(NombreCategoria);
+                $("#DescripcionCategoria").val(DescripcionCategoria);
+                $("#FechaRegistro").val(FechaRegistro);
+                $("#UsuarioRegistro").val(UsuarioRegistro);
+                $("#EstadoCategoria").val(EstadoCategoria);
+
+                $("#EstadoEscondido").show();
+                $("#BotonGuardaCategoria").hide();
+                $("#BotonEditaCategoria").show();
+
+            },error:function(){
+
+                $('#PreloaderCategoria').hide();
+                $("#BotonGuardaCategoria").attr('disabled',false);
+                swal("Error","Ha ocurrido un error interno del servidor, porfavor intentelo de nuevo","error");
+            }
+
+        });
+    }
+}
+
+function EditaCategoriaS(){
+
+    $('#PreloaderCategoria').show();
+    $("#BotonEditaCategoria").attr('disabled',true);
+
+    var IDCategoria = $("#IDOculto").val();
+    var NombreCategoria = $("#NombreCategoria").val();
+    var DescripcionCategoria = $("#DescripcionCategoria").val();
+    var FechaRegistro = $("#FechaRegistro").val();
+    var UsuarioRegistro = $("#UsuarioRegistro").val();
+    var EstadoCategoria = $("#EstadoCategoria").val();
+
+    if(IDCategoria != "" && NombreCategoria!="" && DescripcionCategoria!="" && FechaRegistro != "" && UsuarioRegistro != "" && EstadoCategoria != ""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Categorias/EditaCategoriaC",
+            type:"POST",
+            data:{IDCategoria:IDCategoria,NombreCategoria:NombreCategoria,DescripcionCategoria:DescripcionCategoria,FechaRegistro:FechaRegistro,UsuarioRegistro:UsuarioRegistro,EstadoCategoria:EstadoCategoria},
+            async:true,
+            success:function(datos){
+
+                var Cambio = "Editar";
+                var Origen = "Categorias";
+                var Contenido = NombreCategoria;
+                GuardaCambioCategoria(Cambio,Origen,Contenido);
+
+                $('#PreloaderCategoria').hide();
+                $("#BotonEditaCategoria").attr('disabled',false);
+
+                swal({   
+                    title: "Exito",
+                    text: "La categoria ha sido actualizado exitosamente",   
+                    type: "success",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: false,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                        location.href = "";       
+                }); 
+
+                
+            },error:function(status){
+
+                var CodigoError = status.status;
+                var DescripcionError = status.statusText;
+                var Origen = "EditaCategoria"
+                GuardaErrorCategoria(CodigoError,DescripcionError,Origen);
+            
+                if (status.statusText=="timeout") {
+
+                    swal({   
+                        title: "Error",
+                        text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                        type: "error",   
+                        showCancelButton: false,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "OK",   
+                        cancelButtonText: "Cancelar",   
+                        closeOnConfirm: true,   
+                        closeOnCancel: false 
+                    }, function(isConfirm){ 
+                        $('#PreloaderCategoria').hide();
+                        $('#BotonEditaCategoria').removeAttr('disabled');       
+                    });
+
+                }else if(status.statusText=="Not Found"){
+        
+                    $('#PreloaderCategoria').hide();
+                    $('#BotonEditaCategoria').removeAttr('disabled');
+                    swal('Error',"La pagina que busca no existe" ,'error' );
+        
+                }else if(status.statusText=="Internal Server Error"){
+        
+                    $('#PreloaderCategoria').hide();
+                    $('#BotonEditaCategoria').removeAttr('disabled');
+                    swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+        
+                }else{
+        
+                    $('#PreloaderCategoria').hide();
+                    $('#BotonEditaCategoria').removeAttr('disabled');
+                    swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+                }
+            }
+
+        });
+
+    }else{
+
+        $('#PreloaderCategoria').hide();
+        $("#BotonEditaCategoria").attr('disabled',false);
+        swal("Cuidado","Aun hay campos vacios","warning");
+    }
+    
+}
+
+function BorraCategoriaS(IDCategoria){
+
+    $('#PreloaderCategoria').show();
+
+    var Delay = 500;
+    var IDCategoria = IDCategoria;
+
+    if(IDCategoria!=""){
+
+        swal({   
+            title: "Cuidado",
+            text: "Estas seguro de borrar esta categoria?",   
+            type: "warning",   
+            showCancelButton: true,   
+            confirmButtonColor: "#DD6B55",   
+            confirmButtonText: "OK",   
+            cancelButtonText: "Cancel",   
+            closeOnConfirm: true,   
+            closeOnCancel: true 
+        }, function(isConfirm){ 
+
+            if (isConfirm==true) {
+
+                $.ajax({
+                    url:myBase_url+"index.php/Categorias/BorraCategoriaC",
+                    type:"POST",
+                    data:{IDCategoria:IDCategoria},
+                    async:true,
+                    success:function(datos){
+
+                        $('#PreloaderCategoria').hide();
+
+                        var Objeto = JSON.parse(datos);
+                        var NombreCategoria = Objeto;
+
+                        var Cambio = "Borrar";
+                        var Origen = "Categorias";
+                        var Contenido = NombreCategoria;
+                        GuardaCambioCategoria(Cambio,Origen,Contenido);
+
+                        setTimeout(function() {
+
+                            swal({   
+                                title: "Exito",
+                                text: "La categoria ha sido borrado exitosamente",   
+                                type: "success",   
+                                showCancelButton: false,   
+                                confirmButtonColor: "#DD6B55",   
+                                confirmButtonText: "OK",   
+                                cancelButtonText: "Cancel",   
+                                closeOnConfirm: false,   
+                                closeOnCancel: false 
+                            }, function(isConfirm){ 
+                                    location.href = "";       
+                            });
+
+                        }, Delay);
+                        
+                    },error:function(status){
+
+                        var CodigoError = status.status;
+                        var DescripcionError = status.statusText;
+                        var Origen = "BorraCategoria"
+                        GuardaErrorCategoria(CodigoError,DescripcionError,Origen);
+
+                        setTimeout(function() {
+
+                            if (status.statusText=="timeout") {
+
+                                swal({   
+                                    title: "Error",
+                                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                                    type: "error",   
+                                    showCancelButton: false,   
+                                    confirmButtonColor: "#DD6B55",   
+                                    confirmButtonText: "OK",   
+                                    cancelButtonText: "Cancelar",   
+                                    closeOnConfirm: true,   
+                                    closeOnCancel: false 
+                                }, function(isConfirm){ 
+                                    $('#PreloaderCategoria').hide();      
+                                }); 
+            
+                            }else if(status.statusText=="Not Found"){
+                    
+                                $('#PreloaderCategoria').hide();
+                                swal('Error',"La pagina que busca no existe" ,'error' );
+                    
+                            }else if(status.statusText=="Internal Server Error"){
+                    
+                                $('#PreloaderCategoria').hide();
+                                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+                    
+                            }else{
+                    
+                                $('#PreloaderCategoria').hide();
+                                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+                            }
+
+                        }, Delay);
+                    }
+
+                });
+            }
+                      
+        });
+
+    }
+
+}
+
+
+/* END - CONTROLLER: Categorias */
+
+/* =============================================================================================================================================================================================================================== */
+
+/* START - CONTROLLER: Reportes */
+
+
+function Report1(){
+
+    $('#PreloaderReport1').hide();
+    $("#ButtonReport1").attr('disabled',false);
+
+    var FromDate = $("#FromDate").val();
+    var ToDate = $("#ToDate").val();
+
+    if(FromDate!="" && ToDate !=""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Report/SelectCompaniesFromDate",
+            type:"POST",
+            data:{FromDate:FromDate,ToDate:ToDate},
+            async:true,
+            success:function(datos){
+
+                $('#PreloaderReport1').hide();
+                $("#ButtonReport1").attr('disabled',false);
+
+                var Object = JSON.parse(datos);
+                var ObjLenght = Object.length;
+
+                if(Object!=""){
+
+                    //Funcion para llenar la tabla con datos resultantes de un query
+                    function buildTableCompanies(datos, columns) {
+
+                        var body = [];
+
+                        body.push(columns);
+
+                        datos.forEach(function(row) {
+                            var dataRow = [];
+
+                            columns.forEach(function(column) {
+                                dataRow.push(row[column].toString());
+                            })
+
+                            body.push(dataRow);
+                        });
+
+                        return body;
+
+                    }
+
+                    //Funcion para construir y estilar la tabla en el formato requerido por PDFmake
+                    function tablecompanies(datos, columns) {
+                        return {
+                            style: 'tablescompanies',
+                            table: {
+                                widths: ['auto','auto','auto'],
+                                headerRows: 1,
+                                body: buildTableCompanies(datos, columns)
+                            }
+                        };
+                    } 
+
+
+                    //Funcion para cambiar los nombres de los valores del JSON para imprimirlos en la tabla
+                    var renamedobj = Object.map( item => { 
+                        return {Company_Name: item.name,Category: item.category, Date: item.registration_date}; 
+                    });
+
+                    var docDefinition = {
+
+                        //Inicio del contenido del PDF
+                        content: [
+                            {
+                                text: 'Companies from: ' +FromDate+" to: "+ToDate, style:'header',alignment:'left'
+                            },
+                            { 
+                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
+                            },
+
+                            { 
+                                text: '\t\t\t\tCompany list', style: 'titles' 
+                            },
+
+                            { 
+                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
+                            },
+
+                            { 
+                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
+                            },
+
+                            tablecompanies(renamedobj, ['Company_Name','Category','Date']),
+
+                            { 
+                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
+                            },
+
+                            { 
+                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
+                            },
+
+
+                            { 
+                                text: '\t\t\t\tTotal Companies: ' +ObjLenght, style: 'black',alignment:'right' 
+                            },
+
+                        ], //Termina contenido del PDF
+
+                        //Inician estilos del PDF
+                        styles: {
+                            header: {
+                                fontSize: 16,
+                                bold: true
+                            },
+
+                            titles: {
+                                fontSize: 14,
+                                bold: true,
+                                decoration: 'underline',
+                                alignment: 'center'
+                            },
+
+                            black:{
+                                bold:true,
+                                fontSize: 12
+                            },
+                            tablecompanies: {
+                                margin: [5, 5, 0, 15],
+                                fontSize: 12
+                            },
+
+                        },
+                        //Terminan los estilos del PDF
+
+                    };//Termina docDefinition
+
+                    pdfMake.createPdf(docDefinition).download("Total companies from: "+FromDate+" to: "+ToDate); //Crea y descarga el PDF con el numero dela visita
+                    //pdfMake.createPdf(docDefinition).open(); //Abre el PDF en el navegador 
+
+                }else{
+
+                    swal("Error","There is no info for the dates selected","error");
+                }
+
+                
+            },error:function(){
+
+                $('#PreloaderReport1').hide();
+                $("#ButtonReport1").attr('disabled',false);
+                swal("Error","An internal server error has ocurred","error");
+            }
+
+        });
+
+    }else{
+
+        $('#PreloaderReport1').hide();
+        $("#ButtonReport1").attr('disabled',false);
+        swal("Warning","Form incomplete","warning");
+
+    }
+
+    
+}
+
+/* END - CONTROLLER: Reportes */
 /* =============================================================================================================================================================================================================================== */
 
 /* START - CONTROLLER: Usuarios */
@@ -744,968 +1760,6 @@ function BorraUsuarioS(IDUsuario){
 }
 
 /* END - CONTROLLER: Usuarios */
-
-/* =============================================================================================================================================================================================================================== */
-
-/* START - CONTROLLER: Productos */
-
-function RevisaClaveExistenteS(){
-
-    var ClaveProducto = $("#ClaveProducto").val();
-
-    if(ClaveProducto!=""){
-
-        $.ajax({
-            url:myBase_url+"index.php/Productos/RevisaClaveExistenteC",
-            type:"POST",
-            data:{ClaveProducto:ClaveProducto},
-            async:true,
-            success:function(datos){
-
-                var Objeto = JSON.parse(datos);
-
-                if(Objeto!=""){
-
-                    swal("Error","La clave del producto ya esta en uso, porfavor intente con una nueva","error");
-                    $("#ClaveProducto").val("");
-                }
-
-
-            },error:function(){
-
-                swal("Error","Ha ocurrido un error interno del servidor, porfavor intentelo de nuevo","error");
-            }
-
-        });
-    }
-
-}
-
-function VerificaContenidoProducto(){
-
-    $("#PreloaderProducto").show();
-    $("#BotonGuardaProducto").attr('disabled',true);
-
-    var NombreProducto = $("#NombreProducto").val();
-    var DescripcionProducto = $("#DescripcionProducto").val();
-    var ClaveProducto = $("#ClaveProducto").val();
-    var PrecioProducto = $("#PrecioProducto").val();
-    var DepartamentoProducto = $("#DepartamentoProducto").val();
-    var CategoriaProducto = $("#CategoriaProducto").val();
-    var ImagenProducto = $("#CapturaImagen").val();
-
-    if(NombreProducto!="" && DescripcionProducto!="" && ClaveProducto!="" && PrecioProducto!="" && DepartamentoProducto!=""  && CategoriaProducto!="" && ImagenProducto!=""){
-
-       GuardaProductoS(); 
-
-    }else{
-
-        $('#PreloaderProducto').hide();
-        $("#BotonGuardaProducto").attr('disabled',false);
-        swal("Cuidado","Aun quedan campos vacios","warning");
-    }
-}
-
-function GuardaProductoS(){
-
-    var NombreProducto = $("#NombreProducto").val();
-    var DescripcionProducto = $("#DescripcionProducto").val();
-    var ClaveProducto = $("#ClaveProducto").val();
-    var PrecioProducto = $("#PrecioProducto").val();
-    var DepartamentoProducto = $("#DepartamentoProducto").val();
-    var CategoriaProducto = $("#CategoriaProducto").val();
-
-    var FuentImagenProducto = $("#ImagenProducto").attr('src');
-    var ImagenProducto = FuentImagenProducto.replace(/^data:image\/[a-z]+;base64,/, "");
-
-    $.ajax({
-        url:myBase_url+"index.php/Productos/GuardaProductoC",
-        type:"POST",
-        data:{NombreProducto:NombreProducto,DescripcionProducto:DescripcionProducto,ClaveProducto:ClaveProducto,PrecioProducto:PrecioProducto,DepartamentoProducto:DepartamentoProducto,CategoriaProducto:CategoriaProducto,ImagenProducto:ImagenProducto},
-        async:true,
-        timeout: 15000,
-        success:function(datos){
-
-            var Cambio = "Guardar";
-            var Origen = "Productos";
-            var Contenido = ClaveProducto;
-            GuardaCambioProducto(Cambio,Origen,Contenido);
-
-            $('#PreloaderProducto').hide();
-            $("#BotonGuardaProducto").attr('disabled',false);
-
-            swal({   
-                title: "Exito",
-                text: "El producto ha sido guardado exitosamente",   
-                type: "success",   
-                showCancelButton: false,   
-                confirmButtonColor: "#DD6B55",   
-                confirmButtonText: "OK",   
-                cancelButtonText: "Cancelar",   
-                closeOnConfirm: false,   
-                closeOnCancel: false 
-            }, function(isConfirm){ 
-                    location.href = "";       
-            }); 
-
-            
-        },error:function(status){
-
-            var CodigoError = status.status;
-            var DescripcionError = status.statusText;
-            var Origen = "GuardaProducto"
-            GuardaErrorProducto(CodigoError,DescripcionError,Origen);
-        
-            if (status.statusText=="timeout") {
-
-                swal({   
-                    title: "Error",
-                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
-                    type: "error",   
-                    showCancelButton: false,   
-                    confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: "OK",   
-                    cancelButtonText: "Cancelar",   
-                    closeOnConfirm: true,   
-                    closeOnCancel: false 
-                }, function(isConfirm){ 
-                    $('#PreloaderProducto').hide();  
-                    $("#BotonGuardaProducto").attr('disabled',false);    
-                }); 
-
-            }else if(status.statusText=="Not Found"){
-    
-                $('#PreloaderProducto').hide();
-                $("#BotonGuardaProducto").attr('disabled',false);
-                swal('Error',"La pagina que busca no existe" ,'error' );
-    
-            }else if(status.statusText=="Internal Server Error"){
-    
-                $('#PreloaderProducto').hide();
-                $("#BotonGuardaProducto").attr('disabled',false);
-                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
-    
-            }else{
-    
-                $('#PreloaderProducto').hide();
-                $("#BotonGuardaProducto").attr('disabled',false);
-                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
-            }
-        }
-
-    });
-
-}
-
-function ConsultaDatosProductoS(IDProducto){
-
-    $("#PreloaderProducto").show();
-    $("#BotonGuardaProducto").attr('disabled',true);
-
-    var IDProducto = IDProducto;
-
-    if(IDProducto!=""){
-
-        $.ajax({
-            url:myBase_url+"index.php/Productos/ConsultaDatosProductoC",
-            type:"POST",
-            data:{IDProducto:IDProducto},
-            async:true,
-            success:function(datos){
-
-                $('#PreloaderProducto').hide();
-                $("#BotonGuardaProducto").attr('disabled',false);
-
-                var Objeto = JSON.parse(datos);
-
-                var ProductoID = Objeto[0].id_producto;
-                var NombreProducto = Objeto[0].nombre;
-                var DescripcionProducto = Objeto[0].descripcion;
-                var ClaveProducto = Objeto[0].clave;
-                var PrecioProducto = Objeto[0].precio;
-                var ImagenProducto = Objeto[0].imagen;
-                var DepartamentoProducto = Objeto[0].departamento;
-                var CategoriaProducto = Objeto[0].categoria;
-                var FechaRegistro = Objeto[0].fecha_registro;
-                var UsuarioRegistro = Objeto[0].usuario_registro;
-                var EstadoProducto = Objeto[0].estado;
-
-                $("#IDOculto").val(ProductoID);
-                $("#NombreProducto").val(NombreProducto);
-                $("#DescripcionProducto").val(DescripcionProducto);
-                $("#ClaveProducto").val(ClaveProducto);
-                $("#PrecioProducto").val(PrecioProducto);
-                $("#DepartamentoProducto").val(DepartamentoProducto);
-                CambiaDepartamento();
-                $("#CategoriaProducto").val(CategoriaProducto);
-                $("#NombreImagen").val(ImagenProducto);
-                $("#FechaRegistro").val(FechaRegistro);
-                $("#UsuarioRegistro").val(UsuarioRegistro);
-                $("#EstadoProducto").val(EstadoProducto);
-
-                $("#ClaveProducto").attr('disabled',true);
-
-                $("#EstadoEscondido").show();
-                $("#BotonGuardaProducto").hide();
-                $("#BotonEditaProducto").show();
-
-            },error:function(){
-
-                $('#PreloaderProducto').hide();
-                $("#BotonGuardaProducto").attr('disabled',false);
-                swal("Error","Ha ocurrido un error interno del servidor, porfavor intentelo de nuevo","error");
-            }
-
-        });
-    }
-}
-
-function EditaProductoS(){
-
-    $('#PreloaderProducto').show();
-    $("#BotonEditaProducto").attr('disabled',true);
-
-    var IDProducto = $("#IDOculto").val();
-    var NombreProducto = $("#NombreProducto").val();
-    var DescripcionProducto = $("#DescripcionProducto").val();
-    var ClaveProducto = $("#ClaveProducto").val();
-    var PrecioProducto = $("#PrecioProducto").val();
-    var NombreImagen = $("#NombreImagen").val();
-    var DepartamentoProducto = $("#DepartamentoProducto").val();
-    var CategoriaProducto = $("#CategoriaProducto").val();
-    var FechaRegistro = $("#FechaRegistro").val();
-    var UsuarioRegistro = $("#UsuarioRegistro").val();
-    var EstadoProducto = $("#EstadoProducto").val();
-
-    var CapturaImagen = $("#CapturaImagen").val();
-
-    if (CapturaImagen!="") {
-
-        var Accion = "1";
-        var FuentImagenProducto = $("#ImagenProducto").attr('src');
-        var ImagenProducto = FuentImagenProducto.replace(/^data:image\/[a-z]+;base64,/, "");
-
-        if(IDProducto != "" && NombreProducto!="" && DescripcionProducto!="" && ClaveProducto!="" && PrecioProducto != "" && NombreImagen != "" && DepartamentoProducto != "" && CategoriaProducto != "" && FechaRegistro != "" && UsuarioRegistro != "" && EstadoProducto != ""){
-
-            $.ajax({
-                url:myBase_url+"index.php/Productos/EditaProductoC",
-                type:"POST",
-                data:{Accion:Accion,IDProducto:IDProducto,NombreProducto:NombreProducto,DescripcionProducto:DescripcionProducto,ClaveProducto:ClaveProducto,PrecioProducto:PrecioProducto,NombreImagen:NombreImagen,ImagenProducto:ImagenProducto,DepartamentoProducto:DepartamentoProducto,CategoriaProducto:CategoriaProducto,FechaRegistro:FechaRegistro,UsuarioRegistro:UsuarioRegistro,EstadoProducto:EstadoProducto},
-                async:true,
-                success:function(datos){
-    
-                    var Cambio = "Editar";
-                    var Origen = "Productos";
-                    var Contenido = ClaveProducto;
-                    GuardaCambioProducto(Cambio,Origen,Contenido);
-    
-                    $('#PreloaderProducto').hide();
-                    $("#BotonEditaProducto").attr('disabled',false);
-    
-                    swal({   
-                        title: "Exito",
-                        text: "El producto ha sido actualizado exitosamente",   
-                        type: "success",   
-                        showCancelButton: false,   
-                        confirmButtonColor: "#DD6B55",   
-                        confirmButtonText: "OK",   
-                        cancelButtonText: "Cancelar",   
-                        closeOnConfirm: false,   
-                        closeOnCancel: false 
-                    }, function(isConfirm){ 
-                            location.href = "";       
-                    }); 
-    
-                    
-                },error:function(status){
-    
-                    var CodigoError = status.status;
-                    var DescripcionError = status.statusText;
-                    var Origen = "EditaProducto"
-                    GuardaErrorProducto(CodigoError,DescripcionError,Origen);
-                
-                    if (status.statusText=="timeout") {
-    
-                        swal({   
-                            title: "Error",
-                            text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
-                            type: "error",   
-                            showCancelButton: false,   
-                            confirmButtonColor: "#DD6B55",   
-                            confirmButtonText: "OK",   
-                            cancelButtonText: "Cancelar",   
-                            closeOnConfirm: true,   
-                            closeOnCancel: false 
-                        }, function(isConfirm){ 
-                            $('#PreloaderProducto').hide();
-                            $('#BotonEditaProducto').removeAttr('disabled');       
-                        });
-    
-                    }else if(status.statusText=="Not Found"){
-            
-                        $('#PreloaderProducto').hide();
-                        $('#BotonEditaProducto').removeAttr('disabled');
-                        swal('Error',"La pagina que busca no existe" ,'error' );
-            
-                    }else if(status.statusText=="Internal Server Error"){
-            
-                        $('#PreloaderProducto').hide();
-                        $('#BotonEditaProducto').removeAttr('disabled');
-                        swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
-            
-                    }else{
-            
-                        $('#PreloaderProducto').hide();
-                        $('#BotonEditaProducto').removeAttr('disabled');
-                        swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
-                    }
-                }
-    
-            });
-    
-        }else{
-    
-            $('#PreloaderProducto').hide();
-            $("#BotonEditaProducto").attr('disabled',false);
-            swal("Cuidado","Aun hay campos vacios","warning");
-        }
-        
-    }else{
-
-        var Accion = "2";
-        
-        if(IDProducto != "" && NombreProducto!="" && DescripcionProducto!="" && ClaveProducto!="" && PrecioProducto != "" && NombreImagen != "" && DepartamentoProducto != "" && CategoriaProducto != "" && FechaRegistro != "" && UsuarioRegistro != "" && EstadoProducto != ""){
-
-            $.ajax({
-                url:myBase_url+"index.php/Productos/EditaProductoC",
-                type:"POST",
-                data:{Accion:Accion,IDProducto:IDProducto,NombreProducto:NombreProducto,DescripcionProducto:DescripcionProducto,ClaveProducto:ClaveProducto,PrecioProducto:PrecioProducto,NombreImagen:NombreImagen,DepartamentoProducto:DepartamentoProducto,CategoriaProducto:CategoriaProducto,FechaRegistro:FechaRegistro,UsuarioRegistro:UsuarioRegistro,EstadoProducto:EstadoProducto},
-                async:true,
-                success:function(datos){
-    
-                    var Cambio = "Editar";
-                    var Origen = "Productos";
-                    var Contenido = ClaveProducto;
-                    GuardaCambioProducto(Cambio,Origen,Contenido);
-    
-                    $('#PreloaderProducto').hide();
-                    $("#BotonEditaProducto").attr('disabled',false);
-    
-                    swal({   
-                        title: "Exito",
-                        text: "El producto ha sido actualizado exitosamente",   
-                        type: "success",   
-                        showCancelButton: false,   
-                        confirmButtonColor: "#DD6B55",   
-                        confirmButtonText: "OK",   
-                        cancelButtonText: "Cancelar",   
-                        closeOnConfirm: false,   
-                        closeOnCancel: false 
-                    }, function(isConfirm){ 
-                            location.href = "";       
-                    }); 
-    
-                    
-                },error:function(status){
-    
-                    var CodigoError = status.status;
-                    var DescripcionError = status.statusText;
-                    var Origen = "EditaProducto"
-                    GuardaErrorProducto(CodigoError,DescripcionError,Origen);
-                
-                    if (status.statusText=="timeout") {
-    
-                        swal({   
-                            title: "Error",
-                            text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
-                            type: "error",   
-                            showCancelButton: false,   
-                            confirmButtonColor: "#DD6B55",   
-                            confirmButtonText: "OK",   
-                            cancelButtonText: "Cancelar",   
-                            closeOnConfirm: true,   
-                            closeOnCancel: false 
-                        }, function(isConfirm){ 
-                            $('#PreloaderProducto').hide();
-                            $('#BotonEditaProducto').removeAttr('disabled');       
-                        });
-    
-                    }else if(status.statusText=="Not Found"){
-            
-                        $('#PreloaderProducto').hide();
-                        $('#BotonEditaProducto').removeAttr('disabled');
-                        swal('Error',"La pagina que busca no existe" ,'error' );
-            
-                    }else if(status.statusText=="Internal Server Error"){
-            
-                        $('#PreloaderProducto').hide();
-                        $('#BotonEditaProducto').removeAttr('disabled');
-                        swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
-            
-                    }else{
-            
-                        $('#PreloaderProducto').hide();
-                        $('#BotonEditaProducto').removeAttr('disabled');
-                        swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
-                    }
-                }
-    
-            });
-    
-        }else{
-    
-            $('#PreloaderProducto').hide();
-            $("#BotonEditaProducto").attr('disabled',false);
-            swal("Cuidado","Aun hay campos vacios","warning");
-        }
-    }
-    
-}
-
-function BorraProductoS(IDProducto){
-
-    $('#PreloaderProducto').show();
-
-    var Delay = 500;
-    var IDProducto = IDProducto;
-
-    if(IDProducto!=""){
-
-        swal({   
-            title: "Cuidado",
-            text: "Estas seguro de borrar este producto?",   
-            type: "warning",   
-            showCancelButton: true,   
-            confirmButtonColor: "#DD6B55",   
-            confirmButtonText: "OK",   
-            cancelButtonText: "Cancel",   
-            closeOnConfirm: true,   
-            closeOnCancel: true 
-        }, function(isConfirm){ 
-
-            if (isConfirm==true) {
-
-                $.ajax({
-                    url:myBase_url+"index.php/Productos/BorraProductoC",
-                    type:"POST",
-                    data:{IDProducto:IDProducto},
-                    async:true,
-                    success:function(datos){
-
-                        $('#PreloaderProducto').hide();
-
-                        var Objeto = JSON.parse(datos);
-                        var ClaveProducto = Objeto;
-
-                        var Cambio = "Borrar";
-                        var Origen = "Productos";
-                        var Contenido = ClaveProducto;
-                        GuardaCambioUsuario(Cambio,Origen,Contenido);
-
-                        setTimeout(function() {
-
-                            swal({   
-                                title: "Exito",
-                                text: "El producto ha sido borrado exitosamente",   
-                                type: "success",   
-                                showCancelButton: false,   
-                                confirmButtonColor: "#DD6B55",   
-                                confirmButtonText: "OK",   
-                                cancelButtonText: "Cancel",   
-                                closeOnConfirm: false,   
-                                closeOnCancel: false 
-                            }, function(isConfirm){ 
-                                    location.href = "";       
-                            });
-
-                        }, Delay);
-                        
-                    },error:function(status){
-
-                        var CodigoError = status.status;
-                        var DescripcionError = status.statusText;
-                        var Origen = "BorraProducto"
-                        GuardaErrorProducto(CodigoError,DescripcionError,Origen);
-
-                        setTimeout(function() {
-
-                            if (status.statusText=="timeout") {
-
-                                swal({   
-                                    title: "Error",
-                                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
-                                    type: "error",   
-                                    showCancelButton: false,   
-                                    confirmButtonColor: "#DD6B55",   
-                                    confirmButtonText: "OK",   
-                                    cancelButtonText: "Cancelar",   
-                                    closeOnConfirm: true,   
-                                    closeOnCancel: false 
-                                }, function(isConfirm){ 
-                                    $('#PreloaderProducto').hide();      
-                                }); 
-            
-                            }else if(status.statusText=="Not Found"){
-                    
-                                $('#PreloaderProducto').hide();
-                                swal('Error',"La pagina que busca no existe" ,'error' );
-                    
-                            }else if(status.statusText=="Internal Server Error"){
-                    
-                                $('#PreloaderProducto').hide();
-                                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
-                    
-                            }else{
-                    
-                                $('#PreloaderProducto').hide();
-                                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
-                            }
-
-                        }, Delay);
-                    }
-
-                });
-            }
-                      
-        });
-
-        
-    }
-
-}
-
-
-/* END - CONTROLLER: Productos */
-
-
-/* START - CONTROLLER: Categorias */
-
-function VerificaContenidoCategoria(){
-
-    $("#PreloaderCategoria").show();
-    $("#BotonGuardaCategoria").attr('disabled',true);
-
-    var NombreCategoria = $("#NombreCategoria").val();
-    var DescripcionCategoria = $("#DescripcionCategoria").val();
-
-    if(NombreCategoria!="" && DescripcionCategoria!=""){
-
-       GuardaCategoriaS(); 
-
-    }else{
-
-        $('#PreloaderCategoria').hide();
-        $("#BotonGuardaCategoria").attr('disabled',false);
-        swal("Cuidado","Aun quedan campos vacios","warning");
-    }
-}
-
-function GuardaCategoriaS(){
-
-    var NombreCategoria = $("#NombreCategoria").val();
-    var DescripcionCategoria = $("#DescripcionCategoria").val();
- 
-    $.ajax({
-        url:myBase_url+"index.php/Categorias/GuardaCategoriaC",
-        type:"POST",
-        data:{NombreCategoria:NombreCategoria,DescripcionCategoria:DescripcionCategoria},
-        async:true,
-        timeout: 15000,
-        success:function(datos){
-
-            var Cambio = "Guardar";
-            var Origen = "Categorias";
-            var Contenido = NombreCategoria;
-            GuardaCambioCategoria(Cambio,Origen,Contenido);
-
-            $('#PreloaderCategoria').hide();
-            $("#BotonGuardaCategoria").attr('disabled',false);
-
-            swal({   
-                title: "Exito",
-                text: "La categoria ha sido guardada exitosamente",   
-                type: "success",   
-                showCancelButton: false,   
-                confirmButtonColor: "#DD6B55",   
-                confirmButtonText: "OK",   
-                cancelButtonText: "Cancelar",   
-                closeOnConfirm: false,   
-                closeOnCancel: false 
-            }, function(isConfirm){ 
-                    location.href = "";       
-            }); 
-
-            
-        },error:function(status){
-
-            var CodigoError = status.status;
-            var DescripcionError = status.statusText;
-            var Origen = "GuardaCategoria"
-            GuardaErrorCategoria(CodigoError,DescripcionError,Origen);
-        
-            if (status.statusText=="timeout") {
-
-                swal({   
-                    title: "Error",
-                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
-                    type: "error",   
-                    showCancelButton: false,   
-                    confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: "OK",   
-                    cancelButtonText: "Cancelar",   
-                    closeOnConfirm: true,   
-                    closeOnCancel: false 
-                }, function(isConfirm){ 
-                    $('#PreloaderCategoria').hide();  
-                    $("#BotonGuardaCategoria").attr('disabled',false);    
-                }); 
-
-            }else if(status.statusText=="Not Found"){
-    
-                $('#PreloaderCategoria').hide();
-                $("#BotonGuardaCategoria").attr('disabled',false);
-                swal('Error',"La pagina que busca no existe" ,'error' );
-    
-            }else if(status.statusText=="Internal Server Error"){
-    
-                $('#PreloaderCategoria').hide();
-                $("#BotonGuardaCategoria").attr('disabled',false);
-                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
-    
-            }else{
-    
-                $('#PreloaderCategoria').hide();
-                $("#BotonGuardaCategoria").attr('disabled',false);
-                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
-            }
-        }
-
-    });
-
-}
-
-function ConsultaDatosCategoriaS(IDCategoria){
-
-    $("#PreloaderCategoria").show();
-    $("#BotonGuardaCategoria").attr('disabled',true);
-
-    var IDCategoria = IDCategoria;
-
-    if(IDCategoria!=""){
-
-        $.ajax({
-            url:myBase_url+"index.php/Categorias/ConsultaDatosCategoriaC",
-            type:"POST",
-            data:{IDCategoria:IDCategoria},
-            async:true,
-            success:function(datos){
-
-                $('#PreloaderCategoria').hide();
-                $("#BotonGuardaCategoria").attr('disabled',false);
-
-                var Objeto = JSON.parse(datos);
-
-                var CategoriaID = Objeto[0].id_categoria;
-                var NombreCategoria = Objeto[0].nombre;
-                var DescripcionCategoria = Objeto[0].descripcion;
-                var FechaRegistro = Objeto[0].fecha_registro;
-                var UsuarioRegistro = Objeto[0].usuario_registro;
-                var EstadoCategoria = Objeto[0].estado;
-
-                $("#IDOculto").val(CategoriaID);
-                $("#NombreCategoria").val(NombreCategoria);
-                $("#DescripcionCategoria").val(DescripcionCategoria);
-                $("#FechaRegistro").val(FechaRegistro);
-                $("#UsuarioRegistro").val(UsuarioRegistro);
-                $("#EstadoCategoria").val(EstadoCategoria);
-
-                $("#EstadoEscondido").show();
-                $("#BotonGuardaCategoria").hide();
-                $("#BotonEditaCategoria").show();
-
-            },error:function(){
-
-                $('#PreloaderCategoria').hide();
-                $("#BotonGuardaCategoria").attr('disabled',false);
-                swal("Error","Ha ocurrido un error interno del servidor, porfavor intentelo de nuevo","error");
-            }
-
-        });
-    }
-}
-
-function EditaCategoriaS(){
-
-    $('#PreloaderCategoria').show();
-    $("#BotonEditaCategoria").attr('disabled',true);
-
-    var IDCategoria = $("#IDOculto").val();
-    var NombreCategoria = $("#NombreCategoria").val();
-    var DescripcionCategoria = $("#DescripcionCategoria").val();
-    var FechaRegistro = $("#FechaRegistro").val();
-    var UsuarioRegistro = $("#UsuarioRegistro").val();
-    var EstadoCategoria = $("#EstadoCategoria").val();
-
-    if(IDCategoria != "" && NombreCategoria!="" && DescripcionCategoria!="" && FechaRegistro != "" && UsuarioRegistro != "" && EstadoCategoria != ""){
-
-        $.ajax({
-            url:myBase_url+"index.php/Categorias/EditaCategoriaC",
-            type:"POST",
-            data:{IDCategoria:IDCategoria,NombreCategoria:NombreCategoria,DescripcionCategoria:DescripcionCategoria,FechaRegistro:FechaRegistro,UsuarioRegistro:UsuarioRegistro,EstadoCategoria:EstadoCategoria},
-            async:true,
-            success:function(datos){
-
-                var Cambio = "Editar";
-                var Origen = "Categorias";
-                var Contenido = NombreCategoria;
-                GuardaCambioCategoria(Cambio,Origen,Contenido);
-
-                $('#PreloaderCategoria').hide();
-                $("#BotonEditaCategoria").attr('disabled',false);
-
-                swal({   
-                    title: "Exito",
-                    text: "La categoria ha sido actualizado exitosamente",   
-                    type: "success",   
-                    showCancelButton: false,   
-                    confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: "OK",   
-                    cancelButtonText: "Cancelar",   
-                    closeOnConfirm: false,   
-                    closeOnCancel: false 
-                }, function(isConfirm){ 
-                        location.href = "";       
-                }); 
-
-                
-            },error:function(status){
-
-                var CodigoError = status.status;
-                var DescripcionError = status.statusText;
-                var Origen = "EditaCategoria"
-                GuardaErrorCategoria(CodigoError,DescripcionError,Origen);
-            
-                if (status.statusText=="timeout") {
-
-                    swal({   
-                        title: "Error",
-                        text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
-                        type: "error",   
-                        showCancelButton: false,   
-                        confirmButtonColor: "#DD6B55",   
-                        confirmButtonText: "OK",   
-                        cancelButtonText: "Cancelar",   
-                        closeOnConfirm: true,   
-                        closeOnCancel: false 
-                    }, function(isConfirm){ 
-                        $('#PreloaderCategoria').hide();
-                        $('#BotonEditaCategoria').removeAttr('disabled');       
-                    });
-
-                }else if(status.statusText=="Not Found"){
-        
-                    $('#PreloaderCategoria').hide();
-                    $('#BotonEditaCategoria').removeAttr('disabled');
-                    swal('Error',"La pagina que busca no existe" ,'error' );
-        
-                }else if(status.statusText=="Internal Server Error"){
-        
-                    $('#PreloaderCategoria').hide();
-                    $('#BotonEditaCategoria').removeAttr('disabled');
-                    swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
-        
-                }else{
-        
-                    $('#PreloaderCategoria').hide();
-                    $('#BotonEditaCategoria').removeAttr('disabled');
-                    swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
-                }
-            }
-
-        });
-
-    }else{
-
-        $('#PreloaderCategoria').hide();
-        $("#BotonEditaCategoria").attr('disabled',false);
-        swal("Cuidado","Aun hay campos vacios","warning");
-    }
-        
-    
-    
-}
-
-
-/* END - CONTROLLER: Categorias */
-
-/* =============================================================================================================================================================================================================================== */
-
-/* START - CONTROLLER: Reportes */
-
-
-function Report1(){
-
-    $('#PreloaderReport1').hide();
-    $("#ButtonReport1").attr('disabled',false);
-
-    var FromDate = $("#FromDate").val();
-    var ToDate = $("#ToDate").val();
-
-    if(FromDate!="" && ToDate !=""){
-
-        $.ajax({
-            url:myBase_url+"index.php/Report/SelectCompaniesFromDate",
-            type:"POST",
-            data:{FromDate:FromDate,ToDate:ToDate},
-            async:true,
-            success:function(datos){
-
-                $('#PreloaderReport1').hide();
-                $("#ButtonReport1").attr('disabled',false);
-
-                var Object = JSON.parse(datos);
-                var ObjLenght = Object.length;
-
-                if(Object!=""){
-
-                    //Funcion para llenar la tabla con datos resultantes de un query
-                    function buildTableCompanies(datos, columns) {
-
-                        var body = [];
-
-                        body.push(columns);
-
-                        datos.forEach(function(row) {
-                            var dataRow = [];
-
-                            columns.forEach(function(column) {
-                                dataRow.push(row[column].toString());
-                            })
-
-                            body.push(dataRow);
-                        });
-
-                        return body;
-
-                    }
-
-                    //Funcion para construir y estilar la tabla en el formato requerido por PDFmake
-                    function tablecompanies(datos, columns) {
-                        return {
-                            style: 'tablescompanies',
-                            table: {
-                                widths: ['auto','auto','auto'],
-                                headerRows: 1,
-                                body: buildTableCompanies(datos, columns)
-                            }
-                        };
-                    } 
-
-
-                    //Funcion para cambiar los nombres de los valores del JSON para imprimirlos en la tabla
-                    var renamedobj = Object.map( item => { 
-                        return {Company_Name: item.name,Category: item.category, Date: item.registration_date}; 
-                    });
-
-                    var docDefinition = {
-
-                        //Inicio del contenido del PDF
-                        content: [
-                            {
-                                text: 'Companies from: ' +FromDate+" to: "+ToDate, style:'header',alignment:'left'
-                            },
-                            { 
-                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
-                            },
-
-                            { 
-                                text: '\t\t\t\tCompany list', style: 'titles' 
-                            },
-
-                            { 
-                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
-                            },
-
-                            { 
-                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
-                            },
-
-                            tablecompanies(renamedobj, ['Company_Name','Category','Date']),
-
-                            { 
-                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
-                            },
-
-                            { 
-                                text: '\t\t\t\t\t\t\t\t\t\t\t\t', style: 'black',alignment:'center' 
-                            },
-
-
-                            { 
-                                text: '\t\t\t\tTotal Companies: ' +ObjLenght, style: 'black',alignment:'right' 
-                            },
-
-                        ], //Termina contenido del PDF
-
-                        //Inician estilos del PDF
-                        styles: {
-                            header: {
-                                fontSize: 16,
-                                bold: true
-                            },
-
-                            titles: {
-                                fontSize: 14,
-                                bold: true,
-                                decoration: 'underline',
-                                alignment: 'center'
-                            },
-
-                            black:{
-                                bold:true,
-                                fontSize: 12
-                            },
-                            tablecompanies: {
-                                margin: [5, 5, 0, 15],
-                                fontSize: 12
-                            },
-
-                        },
-                        //Terminan los estilos del PDF
-
-                    };//Termina docDefinition
-
-                    pdfMake.createPdf(docDefinition).download("Total companies from: "+FromDate+" to: "+ToDate); //Crea y descarga el PDF con el numero dela visita
-                    //pdfMake.createPdf(docDefinition).open(); //Abre el PDF en el navegador 
-
-                }else{
-
-                    swal("Error","There is no info for the dates selected","error");
-                }
-
-                
-            },error:function(){
-
-                $('#PreloaderReport1').hide();
-                $("#ButtonReport1").attr('disabled',false);
-                swal("Error","An internal server error has ocurred","error");
-            }
-
-        });
-
-    }else{
-
-        $('#PreloaderReport1').hide();
-        $("#ButtonReport1").attr('disabled',false);
-        swal("Warning","Form incomplete","warning");
-
-    }
-
-    
-}
-
-/* END - CONTROLLER: Reportes */
-/* =============================================================================================================================================================================================================================== */
 
 /* START: ErrorLog/ChangeLog */
 

@@ -11,12 +11,13 @@ class Productos extends MY_Controller {
         $data['tabTitle'] = "Kaanti - Productos";
         $data['pagecontent'] = "productos/productos";
         $data['productos'] = $this->Query_Model->ListaProductos();
+        $data['categorias'] = $this->Query_Model->ListaCategoriasActivas();
         
         $this->loadpageintotemplate($data);
        
    }
 
-   function GuardaCambioPC(){
+    function GuardaCambioPC(){
 
         $Cambio = $this->input->post("Cambio");
         $Origen = $this->input->post("Origen");
@@ -36,7 +37,7 @@ class Productos extends MY_Controller {
         $this->Query_Model->InsertaCambio($DatosCambio);
    }
 
-   function GuardaErrorPC(){
+    function GuardaErrorPC(){
 
         $CodigoError = $this->input->post("CodigoError");
         $DescripcionError = $this->input->post("DescripcionError");
@@ -56,44 +57,22 @@ class Productos extends MY_Controller {
         $this->Query_Model->InsertaError($DatosError);
     }
 
-    public function RevisaClaveExistenteC(){
-
-        $ClaveProducto = $this->input->post("ClaveProducto");
-        $Resultado = $this->Query_Model->SeleccionaPorClave($ClaveProducto);
-        echo json_encode($Resultado);
-
-    }
-
-   public function GuardaProductoC(){
+    public function GuardaProductoC(){
 
         $NombreProducto = $this->input->post("NombreProducto");
         $DescripcionProducto = $this->input->post("DescripcionProducto");
-        $ClaveProducto = $this->input->post("ClaveProducto");
+        $ClaveProducto = uniqid();
         $PrecioProducto = $this->input->post("PrecioProducto");
-        $DepartamentoProducto = $this->input->post("DepartamentoProducto");
         $CategoriaProducto = $this->input->post("CategoriaProducto");
-        $ImagenProducto = $this->input->post("ImagenProducto");
         date_default_timezone_set('America/Mexico_City');
         $FechaHoraActual = date('Y-m-d H:i:s');
         $Usuario = $this->session->userdata('user');
-        
-        $FileData = base64_decode($ImagenProducto);
-        $FileName = 'Imagen-'.$NombreProducto.'-'.$ClaveProducto.'.jpeg';
-        file_put_contents($FileName, $FileData);
-        $Destino = "C:/xampp/htdocs/DIEZKA/application/images/".$FileName;
-        //$Destino = "/home/ozul6s4w8s9l/public_html/Admin/application/images/".$FileName;
-        copy($FileName, $Destino); 
-        $DestinoUnlinkRaiz = "C:/xampp/htdocs/DIEZKA/".$FileName;
-        //$DestinoUnlinkRaiz = "/home/ozul6s4w8s9l/public_html/Admin/".$FileName;
-        unlink($DestinoUnlinkRaiz);
-
+    
         $DatosProducto = array(
             'nombre' => $NombreProducto, 
             'descripcion' => $DescripcionProducto, 
             'clave' => $ClaveProducto, 
             'precio' => $PrecioProducto, 
-            'imagen' => $FileName, 
-            'departamento' => $DepartamentoProducto, 
             'categoria' => $CategoriaProducto, 
             'fecha_registro' => $FechaHoraActual, 
             'usuario_registro' => $Usuario, 
@@ -104,81 +83,41 @@ class Productos extends MY_Controller {
 
    }
 
-   public function ConsultaDatosProductoC(){
+    public function ConsultaDatosProductoC(){
 
         $IDProducto = $this->input->post("IDProducto");
         $Resultado = $this->Query_Model->SeleccionaProductoPorID($IDProducto);
         echo json_encode($Resultado);
    }
 
-   public function EditaProductoC(){
+    public function EditaProductoC(){
 
-        $Accion = $this->input->post("Accion");
         $IDProducto = $this->input->post("IDProducto");
         $NombreProducto = $this->input->post("NombreProducto");
         $DescripcionProducto = $this->input->post("DescripcionProducto");
         $ClaveProducto = $this->input->post("ClaveProducto");
         $PrecioProducto = $this->input->post("PrecioProducto");
-        $NombreImagen = $this->input->post("NombreImagen");
-        $DepartamentoProducto = $this->input->post("DepartamentoProducto");
         $CategoriaProducto = $this->input->post("CategoriaProducto");
         $FechaHoraActual = $this->input->post("FechaRegistro");
         $Usuario = $this->input->post("UsuarioRegistro");
         $EstadoProducto = $this->input->post("EstadoProducto");
 
-        if ($Accion == "1") {
+        $DatosProducto = array(
+            'nombre' => $NombreProducto, 
+            'descripcion' => $DescripcionProducto, 
+            'clave' => $ClaveProducto, 
+            'precio' => $PrecioProducto, 
+            'categoria' => $CategoriaProducto, 
+            'fecha_registro' => $FechaHoraActual, 
+            'usuario_registro' => $Usuario, 
+            'estado' => $EstadoProducto
+        );
 
-            $ImagenProducto = $this->input->post("ImagenProducto");
-            $FileData = base64_decode($ImagenProducto);
-            $FileName = 'Imagen-'.$NombreProducto.'-'.$ClaveProducto.'.jpeg';
-            file_put_contents($FileName, $FileData);
-            $DestinoUnlink = "C:/xampp/htdocs/DIEZKA/application/images/".$NombreImagen;
-            //$DestinoUnlink = "/home/ozul6s4w8s9l/public_html/Admin/application/images/".$NombreImagen;
-            unlink($DestinoUnlink);
-            $Destino = "C:/xampp/htdocs/DIEZKA/application/images/".$FileName;
-            //$Destino = "/home/ozul6s4w8s9l/public_html/Admin/application/images/".$FileName;
-            copy($FileName, $Destino); 
-            $DestinoUnlinkRaiz = "C:/xampp/htdocs/DIEZKA/".$FileName;
-            //$DestinoUnlinkRaiz = "/home/ozul6s4w8s9l/public_html/Admin/".$FileName;
-            unlink($DestinoUnlinkRaiz);
-
-            $DatosProducto = array(
-                'nombre' => $NombreProducto, 
-                'descripcion' => $DescripcionProducto, 
-                'clave' => $ClaveProducto, 
-                'precio' => $PrecioProducto, 
-                'imagen' => $FileName, 
-                'departamento' => $DepartamentoProducto, 
-                'categoria' => $CategoriaProducto, 
-                'fecha_registro' => $FechaHoraActual, 
-                'usuario_registro' => $Usuario, 
-                'estado' => $EstadoProducto
-            );
-    
-            $this->Query_Model->ActualizaProducto($DatosProducto,$IDProducto);
-           
-        }else{
-
-            $DatosProducto = array(
-                'nombre' => $NombreProducto, 
-                'descripcion' => $DescripcionProducto, 
-                'clave' => $ClaveProducto, 
-                'precio' => $PrecioProducto, 
-                'imagen' => $NombreImagen, 
-                'departamento' => $DepartamentoProducto, 
-                'categoria' => $CategoriaProducto, 
-                'fecha_registro' => $FechaHoraActual, 
-                'usuario_registro' => $Usuario, 
-                'estado' => $EstadoProducto
-            );
-    
-            $this->Query_Model->ActualizaProducto($DatosProducto,$IDProducto);
-
-        }
+        $this->Query_Model->ActualizaProducto($DatosProducto,$IDProducto);
        
    }
 
-   public function BorraProductoC(){
+    public function BorraProductoC(){
 
         $IDProducto = $this->input->post("IDProducto");
         $this->Query_Model->BorraProductoBD($IDProducto);

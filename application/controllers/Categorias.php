@@ -104,13 +104,13 @@ class Categorias extends MY_Controller {
        
    }
 
-   public function BorraProductoC(){
+   public function BorraCategoriaC(){
 
-        $IDProducto = $this->input->post("IDProducto");
-        $this->Query_Model->BorraProductoBD($IDProducto);
-        $Resultado = $this->Query_Model->SeleccionaProductoPorID($IDProducto);
-        $ClaveProducto = $Resultado[0] -> clave;
-        echo json_encode($ClaveProducto);
+        $IDCategoria = $this->input->post("IDCategoria");
+        $this->Query_Model->BorraCategoriaBD($IDCategoria);
+        $Resultado = $this->Query_Model->SeleccionaCategoriaPorID($IDCategoria);
+        $NombreCategoria = $Resultado[0] -> nombre;
+        echo json_encode($NombreCategoria);
    }
 
 }
