@@ -1309,6 +1309,422 @@ function Report1(){
 /* END - CONTROLLER: Reportes */
 /* =============================================================================================================================================================================================================================== */
 
+/* START - CONTROLLER: Clientes */
+
+function RevisaTelefonoCliente(){
+
+    var Telefono = $("#TelefonoCliente").val();
+    var LargoTelefono = Telefono.length;
+
+    if (LargoTelefono<10 || LargoTelefono>10) {
+
+        swal("Error","El telefono proporcionado es mas largo o corto que 10 digitos, porfavor intentelo de nuevo","error");
+        $("#TelefonoCliente").val("");
+    }
+    
+}
+
+function RevisaCorreoCliente(){
+
+    var CadenaValida = "[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})";
+    var Correo = $("#CorreoCliente").val();
+
+     if (!Correo.match(CadenaValida)) {
+
+        swal("Error","El correo proporcionado no es un correo electrónico válido, proporcione un correo válido.","error");
+        $("#CorreoCliente").val("");
+
+     }
+
+}
+
+function VerificaContenidoCliente(){
+
+    $("#PreloaderCliente").show();
+    $("#BotonGuardaCliente").attr('disabled',true);
+
+    var NombreCliente = $("#NombreCliente").val();
+    var ApPaternoCliente = $("#ApPaternoCliente").val();
+    var ApMaternoCliente = $("#ApMaternoCliente").val();
+    var TelefonoCliente = $("#TelefonoCliente").val();
+    var CorreoCliente = $("#CorreoCliente").val();
+    var FechaNCliente = $("#FechaNCliente").val();
+
+    if(NombreCliente!="" && ApPaternoCliente!="" && ApMaternoCliente!="" && TelefonoCliente!="" && CorreoCliente!="" && FechaNCliente!=""){
+
+        GuardaClienteS(); 
+    }else{
+
+        $('#PreloaderCliente').hide();
+        $("#BotonGuardaCliente").attr('disabled',false);
+        swal("Cuidado","Aun hay campos vacios","warning");
+    }
+}
+
+function GuardaClienteS(){
+
+    var NombreCliente = $("#NombreCliente").val();
+    var ApPaternoCliente = $("#ApPaternoCliente").val();
+    var ApMaternoCliente = $("#ApMaternoCliente").val();
+    var TelefonoCliente = $("#TelefonoCliente").val();
+    var CorreoCliente = $("#CorreoCliente").val();
+    var FechaNCliente = $("#FechaNCliente").val();
+
+    $.ajax({
+        url:myBase_url+"index.php/Clientes/GuardaClienteC",
+        type:"POST",
+        data:{NombreCliente:NombreCliente,ApPaternoCliente:ApPaternoCliente,ApMaternoCliente:ApMaternoCliente,TelefonoCliente:TelefonoCliente,CorreoCliente:CorreoCliente,FechaNCliente:FechaNCliente},
+        async:true,
+        timeout: 15000,
+        success:function(datos){
+
+            var Cambio = "Guardar";
+            var Origen = "Clientes";
+            var Contenido = FechaNCliente;
+            GuardaCambioCliente(Cambio,Origen,Contenido);
+
+            $('#PreloaderCliente').hide();
+            $("#BotonGuardaCliente").attr('disabled',false);
+
+            swal({   
+                title: "Exito",
+                text: "El cliente ha sido guardado exitosamente",   
+                type: "success",   
+                showCancelButton: false,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "OK",   
+                cancelButtonText: "Cancelar",   
+                closeOnConfirm: false,   
+                closeOnCancel: false 
+            }, function(isConfirm){ 
+                    location.href = "";       
+            }); 
+ 
+        },error:function(status){
+
+            var CodigoError = status.status;
+            var DescripcionError = status.statusText;
+            var Origen = "GuardaCliente"
+            GuardaErrorCliente(CodigoError,DescripcionError,Origen);
+        
+            if (status.statusText=="timeout") {
+
+                swal({   
+                    title: "Error",
+                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                    type: "error",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: true,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                    $('#PreloaderCliente').hide();
+                    $('#BotonGuardaCliente').removeAttr('disabled');      
+                });
+                    
+            }else if(status.statusText=="Not Found"){
+    
+                $('#PreloaderCliente').hide();
+                $('#BotonGuardaCliente').removeAttr('disabled');
+                swal('Error',"La pagina que busca no existe" ,'error' );
+    
+            }else if(status.statusText=="Internal Server Error"){
+    
+                $('#PreloaderCliente').hide();
+                $('#BotonGuardaCliente').removeAttr('disabled');
+                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+    
+            }else{
+    
+                $('#PreloaderCliente').hide();
+                $('#BotonGuardaCliente').removeAttr('disabled');
+                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+            }
+        }
+
+    });
+
+}
+
+function ConsultaDatosClienteS(IDCliente){
+
+    $("#PreloaderCliente").show();
+    $("#BotonGuardaCliente").attr('disabled',true);
+
+    var IDCliente = IDCliente;
+
+    if(IDCliente!=""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Clientes/ConsultaDatosClienteC",
+            type:"POST",
+            data:{IDCliente:IDCliente},
+            async:true,
+            success:function(datos){
+
+                $('#PreloaderCliente').hide();
+                $("#BotonGuardaCliente").attr('disabled',false);
+
+                var Objeto = JSON.parse(datos);
+
+                var ClienteID = Objeto[0].id_cliente;
+                var NombreCliente = Objeto[0].nombre;
+                var ApPaternoCliente = Objeto[0].apaterno;
+                var ApMaternoCliente = Objeto[0].amaterno;
+                var TelefonoCliente = Objeto[0].telefono;
+                var CorreoCliente = Objeto[0].email;
+                var FechaNCliente = Objeto[0].fecha_nacimiento;
+                var FechaRegistro = Objeto[0].fecha_registro;
+                var Codigo = Objeto[0].codigo;
+                var EstadoCliente = Objeto[0].estado;
+
+                $("#IDOculto").val(ClienteID);
+                $("#NombreCliente").val(NombreCliente);
+                $("#ApPaternoCliente").val(ApPaternoCliente);
+                $("#ApMaternoCliente").val(ApMaternoCliente);
+                $("#TelefonoCliente").val(TelefonoCliente);
+                $("#CorreoCliente").val(CorreoCliente);
+                $("#FechaNCliente").val(FechaNCliente);
+                $("#FechaRegistro").val(FechaRegistro);
+                $("#Codigo").val(Codigo);
+                $("#EstadoCliente").val(EstadoCliente);
+
+                $("#FechaNCliente").attr('disabled',true);
+                $("#EstadoEscondido").show();
+                $("#BotonGuardaCliente").hide();
+                $("#BotonEditaCliente").show();
+
+            },error:function(){
+
+                $('#PreloaderCliente').hide();
+                $("#BotonGuardaCliente").attr('disabled',false);
+                swal("Error","Ha ocurrido un error interno del servidor, porfavor intentelo de nuevo","error");
+            }
+
+        });
+    }
+}
+
+function EditaClienteS(){
+
+    $('#PreloaderCliente').show();
+    $("#BotonEditaCliente").attr('disabled',true);
+
+    var IDCliente = $("#IDOculto").val();
+    var NombreCliente = $("#NombreCliente").val();
+    var ApPaternoCliente = $("#ApPaternoCliente").val();
+    var ApMaternoCliente = $("#ApMaternoCliente").val();
+    var TelefonoCliente = $("#TelefonoCliente").val();
+    var CorreoCliente = $("#CorreoCliente").val();
+    var FechaNCliente = $("#FechaNCliente").val();
+    var FechaRegistro = $("#FechaRegistro").val();
+    var Codigo = $("#Codigo").val();
+    var EstadoCliente = $("#EstadoCliente").val();
+
+    if(IDCliente != "" && NombreCliente!="" && ApPaternoCliente!="" && ApMaternoCliente!="" && TelefonoCliente!="" && CorreoCliente!="" && FechaNCliente!="" && FechaRegistro!="" && Codigo!="" && EstadoCliente != ""){
+
+        $.ajax({
+            url:myBase_url+"index.php/Clientes/EditaClienteC",
+            type:"POST",
+            data:{IDCliente:IDCliente,NombreCliente:NombreCliente,ApPaternoCliente:ApPaternoCliente,ApMaternoCliente:ApMaternoCliente,TelefonoCliente:TelefonoCliente,CorreoCliente:CorreoCliente,FechaNCliente:FechaNCliente,FechaRegistro:FechaRegistro,Codigo:Codigo,EstadoCliente:EstadoCliente},
+            async:true,
+            timeout: 15000,
+            success:function(datos){
+
+                var Cambio = "Editar";
+                var Origen = "Clientes";
+                var Contenido = FechaNCliente;
+                GuardaCambioCliente(Cambio,Origen,Contenido);
+
+                $('#PreloaderCliente').hide();
+                $("#BotonEditaCliente").attr('disabled',false);
+
+                swal({   
+                    title: "Exito",
+                    text: "El cliente ha sido actualizado exitosamente",   
+                    type: "success",   
+                    showCancelButton: false,   
+                    confirmButtonColor: "#DD6B55",   
+                    confirmButtonText: "OK",   
+                    cancelButtonText: "Cancelar",   
+                    closeOnConfirm: false,   
+                    closeOnCancel: false 
+                }, function(isConfirm){ 
+                        location.href = "";       
+                }); 
+
+                
+            },error:function(status){
+
+                var CodigoError = status.status;
+                var DescripcionError = status.statusText;
+                var Origen = "EditaCliente"
+                GuardaErrorCliente(CodigoError,DescripcionError,Origen);
+            
+                if (status.statusText=="timeout") {
+
+                    swal({   
+                        title: "Error",
+                        text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                        type: "error",   
+                        showCancelButton: false,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "OK",   
+                        cancelButtonText: "Cancelar",   
+                        closeOnConfirm: true,   
+                        closeOnCancel: false 
+                    }, function(isConfirm){ 
+                        $('#PreloaderCliente').hide();
+                        $('#BotonEditaCliente').removeAttr('disabled');       
+                    });
+
+                }else if(status.statusText=="Not Found"){
+        
+                    $('#PreloaderCliente').hide();
+                    $('#BotonEditaCliente').removeAttr('disabled');
+                    swal('Error',"La pagina que busca no existe" ,'error' );
+        
+                }else if(status.statusText=="Internal Server Error"){
+        
+                    $('#PreloaderCliente').hide();
+                    $('#BotonEditaCliente').removeAttr('disabled');
+                    swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+        
+                }else{
+        
+                    $('#PreloaderCliente').hide();
+                    $('#BotonEditaCliente').removeAttr('disabled');
+                    swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+                }
+            }
+
+        });
+
+    }else{
+
+        $('#PreloaderCliente').hide();
+        $("#BotonEditaCliente").attr('disabled',false);
+        swal("Cuidado","Aun hay campos vacios","warning");
+    }
+}
+
+function BorraClienteS(IDCliente){
+
+    $('#PreloaderCliente').show();
+
+    var Delay = 500;
+    var IDCliente = IDCliente;
+
+    if(IDCliente!=""){
+
+        swal({   
+            title: "Cuidado",
+            text: "Esta seguro de borrar a este cliente??",   
+            type: "warning",   
+            showCancelButton: true,   
+            confirmButtonColor: "#DD6B55",   
+            confirmButtonText: "OK",   
+            cancelButtonText: "Cancel",   
+            closeOnConfirm: true,   
+            closeOnCancel: true 
+        }, function(isConfirm){ 
+
+            if (isConfirm==true) {
+
+                $.ajax({
+                    url:myBase_url+"index.php/Clientes/BorraClienteC",
+                    type:"POST",
+                    data:{IDCliente:IDCliente},
+                    async:true,
+                    timeout: 15000,
+                    success:function(datos){
+
+                        $('#PreloaderCliente').hide();
+
+                        var Objeto = JSON.parse(datos);
+                        var FechaNCliente = Objeto;
+
+                        var Cambio = "Borrar";
+                        var Origen = "Clientes";
+                        var Contenido = FechaNCliente;
+                        GuardaCambioCliente(Cambio,Origen,Contenido);
+
+                        setTimeout(function() {
+
+                            swal({   
+                                title: "Exito",
+                                text: "El cliente ha sido borrado exitosamente",   
+                                type: "success",   
+                                showCancelButton: false,   
+                                confirmButtonColor: "#DD6B55",   
+                                confirmButtonText: "OK",   
+                                cancelButtonText: "Cancel",   
+                                closeOnConfirm: false,   
+                                closeOnCancel: false 
+                            }, function(isConfirm){ 
+                                    location.href = "";       
+                            });
+
+                        }, Delay);
+
+                    },error:function(status){
+
+                        var CodigoError = status.status;
+                        var DescripcionError = status.statusText;
+                        var Origen = "BorraCliente"
+                        GuardaErrorCliente(CodigoError,DescripcionError,Origen);
+
+                        setTimeout(function() {
+
+                            if (status.statusText=="timeout") {
+
+                                swal({   
+                                    title: "Error",
+                                    text: "Tu dispositivo no esta conectado a internet o la conexion es muy lenta.\n Porfavor intentelo de nuevo",   
+                                    type: "error",   
+                                    showCancelButton: false,   
+                                    confirmButtonColor: "#DD6B55",   
+                                    confirmButtonText: "OK",   
+                                    cancelButtonText: "Cancelar",   
+                                    closeOnConfirm: true,   
+                                    closeOnCancel: false 
+                                }, function(isConfirm){ 
+                                    $('#PreloaderCliente').hide();      
+                                }); 
+            
+                            }else if(status.statusText=="Not Found"){
+                    
+                                $('#PreloaderCliente').hide();
+                                swal('Error',"La pagina que busca no existe" ,'error' );
+                    
+                            }else if(status.statusText=="Internal Server Error"){
+                    
+                                $('#PreloaderCliente').hide();
+                                swal('Error','Ha ocurrido un error interno del servidor, porfavor contacte al administrador del sitio', 'error');
+                    
+                            }else{
+                    
+                                $('#PreloaderCliente').hide();
+                                swal('Error', 'Ha ocurrido un error desconocido, porfavor contacte al administrador del sitio','error');
+                            }
+
+                        }, Delay);
+                        
+                    }
+
+                });
+            }
+                      
+        });
+  
+    }
+
+}
+
+/* END - CONTROLLER: Clientes */
+
 /* START - CONTROLLER: Usuarios */
 
 function RevisaTelefonoUsuario(){
@@ -1863,6 +2279,38 @@ function GuardaErrorCategoria(CodigoError,DescripcionError,Origen){
 
     $.ajax({
         url:myBase_url+"index.php/Categorias/GuardaErrorCC",
+        type:'POST',
+        data:{CodigoError:CodigoError,DescripcionError:DescripcionError,Origen:Origen},
+        async: true,
+        success:function(datos){
+
+        },error:function(datos){
+
+        }
+
+    });
+}
+
+function GuardaCambioCliente(Cambio,Origen,Contenido){
+
+    $.ajax({
+        url:myBase_url+"index.php/Clientes/GuardaCambioCliC",
+        type:'POST',
+        data:{Cambio:Cambio,Origen:Origen,Contenido:Contenido},
+        async: true,
+        success:function(datos){
+
+        },error:function(datos){
+
+        }
+
+    });
+}
+
+function GuardaErrorCliente(CodigoError,DescripcionError,Origen){
+
+    $.ajax({
+        url:myBase_url+"index.php/Clientes/GuardaErrorCliC",
         type:'POST',
         data:{CodigoError:CodigoError,DescripcionError:DescripcionError,Origen:Origen},
         async: true,

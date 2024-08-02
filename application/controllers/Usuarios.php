@@ -14,9 +14,9 @@ class Usuarios extends MY_Controller {
         
         $this->loadpageintotemplate($data);
        
-   }
+    }
 
-   function GuardaCambioUC(){
+    function GuardaCambioUC(){
 
         $Cambio = $this->input->post("Cambio");
         $Origen = $this->input->post("Origen");
@@ -34,9 +34,9 @@ class Usuarios extends MY_Controller {
         );
     
         $this->Query_Model->InsertaCambio($DatosCambio);
-   }
+    }
 
-   function GuardaErrorUC(){
+    function GuardaErrorUC(){
 
         $CodigoError = $this->input->post("CodigoError");
         $DescripcionError = $this->input->post("DescripcionError");
@@ -54,15 +54,15 @@ class Usuarios extends MY_Controller {
         );
     
         $this->Query_Model->InsertaError($DatosError);
-   }
+    }
 
-   public function RevisaUsuarioExistenteC(){
+    public function RevisaUsuarioExistenteC(){
 
-    $NombreUsuario = $this->input->post("NombreUsuario");
-    $Resultado = $this->Query_Model->SeleccionaPorUsuario($NombreUsuario);
-    echo json_encode($Resultado);
-    
-   }
+        $NombreUsuario = $this->input->post("NombreUsuario");
+        $Resultado = $this->Query_Model->SeleccionaPorUsuario($NombreUsuario);
+        echo json_encode($Resultado);
+        
+    }
 
    public function GuardaUsuarioC(){
 
@@ -98,7 +98,7 @@ class Usuarios extends MY_Controller {
 
         $this->Query_Model->InsertaUsuario($DatosUsuario);
 
-   }
+    }
 
 
    public function ConsultaDatosUsuarioC(){
@@ -106,7 +106,7 @@ class Usuarios extends MY_Controller {
         $IDUsuario = $this->input->post("IDUsuario");
         $Resultado = $this->Query_Model->SeleccionaUsuarioPorID($IDUsuario);
         echo json_encode($Resultado);
-   }
+    }
 
    public function EditaUsuarioC(){
 
@@ -144,15 +144,15 @@ class Usuarios extends MY_Controller {
 
         $this->Query_Model->ActualizaUsuario($DatosUsuario,$IDUsuario);
 
-   }
+    }
 
-   public function BorraUsuarioC(){
+    public function BorraUsuarioC(){
 
         $IDUsuario = $this->input->post("IDUsuario");
         $this->Query_Model->BorraUsuarioBD($IDUsuario);
         $Resultado = $this->Query_Model->SeleccionaUsuarioPorID($IDUsuario);
         $NUsuario = $Resultado[0] -> username;
         echo json_encode($NUsuario);
-   }
+    }
 
 }

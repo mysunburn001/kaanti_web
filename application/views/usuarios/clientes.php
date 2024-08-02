@@ -7,6 +7,7 @@
             ============================================================== */
     
             echo link_tag('assets/darktemplate/plugins/bootstrap-sweetalert/sweet-alert.css');
+            echo link_tag('assets/darktemplate/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css');
             
     /* ==============================================================
             <---  JS TEMPLATE  --->
@@ -14,6 +15,7 @@
 
             echo script_tag("assets/darktemplate/plugins/bootstrap-sweetalert/sweet-alert.js");
             echo script_tag("assets/darktemplate/pages/jquery.sweet-alert.init.js");
+            echo script_tag("assets/darktemplate/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js");
           
     /* ==============================================================
             <---  JS MYAPP  --->
@@ -35,6 +37,12 @@
 
             $("#EstadoEscondido").hide();
             $("#BotonEditaCliente").hide();
+
+            $('#FechaNCliente').datepicker({
+              autoclose: true,
+              todayHighlight: true,
+              format: 'yyyy/mm/dd'
+            });
 
         });
 
@@ -94,6 +102,8 @@
                                                 <label for="NombreCliente">Nombre(s)</label>
                                                 <br>
                                                 <input type="text" id="IDOculto" hidden>
+                                                <input type="text" id="FechaRegistro" hidden>
+                                                <input type="text" id="Codigo" hidden>
                                                 <input type="text" name="NombreCliente" placeholder="Nombre(s)" id="NombreCliente" class="form-control">
                                             </div>
 
@@ -122,15 +132,11 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="NCliente">Usuario</label>
-                                                <br>
-                                                <input type="text" name="NCliente" placeholder="Usuario" id="NCliente" class="form-control" onblur="RevisaClienteExistenteS()">
-                                            </div>
 
-                                            <div class="form-group">
-                                                <label for="PasswordCliente">Password</label>
-                                                <br>
-                                                <input type="password" name="PasswordCliente" placeholder="Contraseña" id="PasswordCliente" class="form-control">
+                                              <label for="FechaNCliente">Fecha de Nacimiento</label>
+                                              <input type="text" class="form-control" id="FechaNCliente" placeholder="yyyy/mm/dd " id="datepicker-autoclose">
+                                              <span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>
+
                                             </div>
 
                                              <div class="form-group" id="EstadoEscondido">
@@ -177,6 +183,8 @@
                                                 <th>Nombre</th>
                                                 <th>Telefono</th>
                                                 <th>Correo</th>
+                                                <th>Fecha de Nacimiento</th>
+                                                <th># de Membresia</th>
                                                 <th>Estado</th>
                                                 <th>Editar</th>
                                                 <th>Borrar</th>
@@ -196,6 +204,8 @@
                                                 $amaterno = $res -> amaterno;
                                                 $telefono = $res -> telefono;
                                                 $email = $res -> email; 
+                                                $fechan_n = $res -> fecha_nacimiento; 
+                                                $membreia = $res -> codigo; 
                                                 $estado = $res -> estado;
 
                                                 $nombre_completo = $nombre .' ' .$apaterno. ' ' .$amaterno; 
@@ -205,7 +215,8 @@
                                                   <td>$nombre_completo</td>
                                                   <td>$telefono</td>
                                                   <td>$email</td>
-                                                  <td>$ocupacion</td>";
+                                                  <td>$fechan_n</td>
+                                                  <td>$membreia</td>";
 
                                                   if ($estado == 1) {
                                                     echo "<td><span class='label label-success'>Activo</span></td>";

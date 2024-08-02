@@ -11,13 +11,7 @@ class Query_Model extends CI_Model{
 
 /* START - CONTROLLER: Citas */
 
-function ListaClientes(){
 
-        $this->db->select('*');
-        $this->db->from('clientes');
-        $query = $this->db->get();
-        return $query->result();
-}
 
 /* END - CONTROLLER: Citas */
 
@@ -131,6 +125,46 @@ function ListaClientes(){
 
 
 /* END - CONTROLLER: Reportes */
+
+/* START - CONTROLLER: Clientes */
+
+function ListaClientes(){
+
+        $this->db->select('*');
+        $this->db->from('clientes');
+        $query = $this->db->get();
+        return $query->result();
+}
+
+function InsertaCliente($DatosCliente){
+
+        $this->db->insert("clientes",$DatosCliente);
+}
+
+function SeleccionaClientePorID($IDCliente){
+
+        $this->db->select('*');
+        $this->db->from('clientes');
+        $this->db->where('id_cliente',$IDCliente);
+        $query = $this->db->get();
+        return $query->result();
+}
+
+function ActualizaCliente($DatosCliente,$IDCliente){
+
+        $this->db->where('id_cliente',$IDCliente);
+        $this->db->update("clientes",$DatosCliente);
+
+}
+
+function BorraClienteBD($IDCliente){
+
+        $this->db->where('id_cliente',$IDCliente);
+        $this->db->set("estado",'0');
+        $this->db->update("clientes");
+}
+
+/* END - CONTROLLER: Clientes */
 
 /* START - CONTROLLER: Usuarios */
 
