@@ -65,7 +65,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="wrapper-page" >
             <div class=" card-box" id="lo">
                 <div class="panel-heading">
-                    <!--<div align="center"><img src="<?php echo base_url("assets/myapp/img/logo1.png") ?>" width="250px" height="150px" style= "padding-right: 0px;"><br></div>-->
+                    <div align="center"><img src="<?php echo base_url("assets/myapp/img/logo.jpg") ?>" width="250px" height="150px" style= "padding-right: 0px;border-radius: 30%;"><br></div>
                     <h2 class="text-center"> <strong class="text-black">Kaanti</strong> </h2>
                 </div> 
                 <div class="panel-body" >

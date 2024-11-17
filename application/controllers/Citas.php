@@ -10,7 +10,9 @@ class Citas extends MY_Controller {
     public function index(){
         $data['tabTitle'] = "Kaanti - Citas";
         $data['pagecontent'] = "citas/citas";
-        //$data['artistas'] = $this->Query_Model->ListaArtistasActivas();
+        $data['artistas'] = $this->Query_Model->ListaArtistasActivas();
+        $data['clientes'] = $this->Query_Model->ListaClientesActivos();
+        $data['productos'] = $this->Query_Model->ListaProductosActivos();
         
         $this->loadpageintotemplate($data);
        
@@ -35,6 +37,26 @@ class Citas extends MY_Controller {
 
     $this->Query_Model->InsertaError($DatosError);
 
+   }
+
+   public function DatosArtista(){
+
+        $IdArtista = $this->input->post("IdArtista");
+        $Resultado = $this->Query_Model->SeleccionaUsuarioPorID($IdArtista);
+        echo json_encode($Resultado);
+   }
+
+   public function Calendario(){
+
+    $IdArtista = $this->input->post("IdArtista");
+    $FechaIni = $this->input->post("FechaIni");
+    $FechaFin = $this->input->post("FechaFin");
+
+    $Tempo = new DateTime($FechaIni);
+    $Año = $Tempo->format("Y");
+
+    $Resultado = $this->Query_Model->InfoCitas($IdArtista,$FechaIni,$FechaFin,$Año);
+    echo json_encode($Resultado);
    }
 
 }

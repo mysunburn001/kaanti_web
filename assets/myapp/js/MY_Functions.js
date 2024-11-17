@@ -383,6 +383,552 @@ function RellenaDatosDiaMes(fecha){
 
 /* START - CONTROLLER: Citas */
 
+function RellenaHorarioCitasFunciones(){
+   
+    var IdArtista = $("#Artista").val();
+    var FechaIni = $("#FechaIni").val();
+    var FechaFin = $("#FechaFin").val();
+    $("#Id_A").val(IdArtista);
+
+    $.ajax({
+        url:myBase_url+"index.php/Citas/DatosArtista",
+        type:'POST',
+        data:{IdArtista:IdArtista},
+        async: true,
+        success:function(datos){
+
+            
+            var obj = JSON.parse(datos);
+
+            if (obj!=""){
+
+                $("#NArtista").empty();
+
+                var nombre = obj[0].nombre;
+                var apaterno = obj[0].apaterno;
+                var amaterno = obj[0].amaterno;
+
+                var nombrecompleto = nombre + " " + apaterno + " " + amaterno;
+
+                $("#NArtista").val(nombrecompleto);  
+
+            }
+
+        },
+        error:function(){
+            swal("Error","Ha ocurrido un error intentelo de nuevo","error");
+        }
+    });
+
+    if(IdArtista!="" && FechaIni!="" && FechaFin!="") {
+
+        $.ajax({
+            url:myBase_url+"index.php/Citas/Calendario",
+            type:'POST',
+            data:{IdArtista:IdArtista,FechaIni:FechaIni,FechaFin:FechaFin},
+            async: true,
+            success:function(datos){
+
+                var obj = JSON.parse(datos);
+
+                $("#Calendario").show();            
+
+                if(obj!=""){
+
+                    $("#l2").empty();
+                    $("#l3").empty();
+                    $("#l4").empty();
+                    $("#l5").empty(); 
+                    $("#l6").empty();
+                    $("#l7").empty();
+                    $("#l8").empty();
+                    $("#l9").empty();
+                    $("#l10").empty();
+                    $("#l11").empty();
+                    $("#l12").empty();
+                    $("#l13").empty();
+
+                    $("#ma2").empty();
+                    $("#ma3").empty();
+                    $("#ma4").empty();
+                    $("#ma5").empty(); 
+                    $("#ma6").empty();
+                    $("#ma7").empty();
+                    $("#ma8").empty();
+                    $("#ma9").empty();
+                    $("#ma10").empty();
+                    $("#ma11").empty();
+                    $("#ma12").empty();
+                    $("#ma13").empty();
+
+                    $("#mi2").empty();
+                    $("#mi3").empty();
+                    $("#mi4").empty();
+                    $("#mi5").empty(); 
+                    $("#mi6").empty();
+                    $("#mi7").empty();
+                    $("#mi8").empty();
+                    $("#mi9").empty();
+                    $("#mi10").empty();
+                    $("#mi11").empty();
+                    $("#mi12").empty();
+                    $("#mi13").empty();
+
+                    $("#j2").empty();
+                    $("#j3").empty();
+                    $("#j4").empty();
+                    $("#j5").empty(); 
+                    $("#j6").empty();
+                    $("#j7").empty();
+                    $("#j8").empty();
+                    $("#j9").empty();
+                    $("#j10").empty();
+                    $("#j11").empty();
+                    $("#j12").empty();
+                    $("#j13").empty();
+
+                    $("#v2").empty();
+                    $("#v3").empty();
+                    $("#v4").empty();
+                    $("#v5").empty(); 
+                    $("#v6").empty();
+                    $("#v7").empty();
+                    $("#v8").empty();
+                    $("#v9").empty();
+                    $("#v10").empty();
+                    $("#v11").empty();
+                    $("#v12").empty();
+                    $("#v13").empty();
+
+                    $("#s2").empty();
+                    $("#s3").empty();
+                    $("#s4").empty();
+                    $("#s5").empty(); 
+                    $("#s6").empty();
+                    $("#s7").empty();
+                    $("#s8").empty();
+                    $("#s9").empty();
+                    $("#s10").empty();
+                    $("#s11").empty();
+                    $("#s12").empty();
+                    $("#s13").empty();
+
+                    for (var i = 0; i < obj.length; i++) {
+
+                        var id_horario = obj[i].id_c_muestra; 
+                        var dias = obj[i].dia_sesion; 
+                        var horas = obj[i].hora_sesion;
+                        var nombre = obj[i].nombre_p;
+                        var amaterno = obj[i].p_paterno;
+                        var apaterno = obj[i].p_materno;
+
+                        var nombrecompleto_p = nombre + ' ' + amaterno + ' ' + apaterno;
+
+                        switch(dias){
+                            case 'Lunes':
+                                if (horas == '8a-9a') {
+                                    $("#l2").html(nombrecompleto_p);
+                                    $("#l2").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '9a-10a') {
+                                    $("#l3").html(nombrecompleto_p);
+                                    $("#l3").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '10a-11a') {
+                                    $("#l4").html(nombrecompleto_p);
+                                    $("#l4").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '11a-12p') {
+                                    $("#l5").html(nombrecompleto_p);
+                                    $("#l5").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '12p-1p') {
+                                    $("#l6").html(nombrecompleto_p);
+                                    $("#l6").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '1p-2p') {
+                                    $("#l7").html(nombrecompleto_p);
+                                    $("#l7").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '2p-3p') {
+                                    $("#l8").html(nombrecompleto_p);
+                                    $("#l8").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '3p-4p') {
+                                    $("#l9").html(nombrecompleto_p);
+                                    $("#l9").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '4p-5p') {
+                                    $("#l10").html(nombrecompleto_p);
+                                    $("#l10").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '5p-6p') {
+                                    $("#l11").html(nombrecompleto_p);
+                                    $("#l11").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '6p-7p') {
+                                    $("#l12").html(nombrecompleto_p);
+                                    $("#l12").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '7p-8p') {
+                                    $("#l13").html(nombrecompleto_p);
+                                    $("#l13").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                            break;
+                            case 'Martes':
+                                if (horas == '8a-9a') {
+                                    $("#ma2").html(nombrecompleto_p);
+                                    $("#ma2").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '9a-10a') {
+                                    $("#ma3").html(nombrecompleto_p);
+                                    $("#ma3").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '10a-11a') {
+                                    $("#ma4").html(nombrecompleto_p);
+                                    $("#ma4").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '11a-12p') {
+                                    $("#ma5").html(nombrecompleto_p);
+                                    $("#ma5").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '12p-1p') {
+                                    $("#ma6").html(nombrecompleto_p);
+                                    $("#ma6").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '1p-2p') {
+                                    $("#ma7").html(nombrecompleto_p);
+                                    $("#ma7").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '2p-3p') {
+                                    $("#ma8").html(nombrecompleto_p);
+                                    $("#ma8").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '3p-4p') {
+                                    $("#ma9").html(nombrecompleto_p);
+                                    $("#ma9").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '4p-5p') {
+                                    $("#ma10").html(nombrecompleto_p);
+                                    $("#ma10").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '5p-6p') {
+                                    $("#ma11").html(nombrecompleto_p);
+                                    $("#ma11").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '6p-7p') {
+                                    $("#ma12").html(nombrecompleto_p);
+                                    $("#ma12").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '7p-8p') {
+                                    $("#ma13").html(nombrecompleto_p);
+                                    $("#ma13").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }  
+                            break;
+                            case 'Miercoles':
+                                if (horas == '7a-8a') {
+                                    $("#mi1").html(nombrecompleto_p);
+                                    $("#mi1").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '8a-9a') {
+                                    $("#mi2").html(nombrecompleto_p);
+                                    $("#mi2").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '9a-10a') {
+                                    $("#mi3").html(nombrecompleto_p);
+                                    $("#mi3").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '10a-11a') {
+                                    $("#mi4").html(nombrecompleto_p);
+                                    $("#m14").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '11a-12p') {
+                                    $("#mi5").html(nombrecompleto_p);
+                                    $("#mi5").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '12p-1p') {
+                                    $("#mi6").html(nombrecompleto_p);
+                                    $("#mi6").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '1p-2p') {
+                                    $("#mi7").html(nombrecompleto_p);
+                                    $("#mi7").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '2p-3p') {
+                                    $("#mi8").html(nombrecompleto_p);
+                                    $("#mi8").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '3p-4p') {
+                                    $("#mi9").html(nombrecompleto_p);
+                                    $("#mi9").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '4p-5p') {
+                                    $("#mi10").html(nombrecompleto_p);
+                                    $("#mi10").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '5p-6p') {
+                                    $("#mi11").html(nombrecompleto_p);
+                                    $("#mi11").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '6p-7p') {
+                                    $("#mi12").html(nombrecompleto_p);
+                                    $("#mi12").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '7p-8p') {
+                                    $("#mi13").html(nombrecompleto_p);
+                                    $("#mi13").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                            break;
+                            case 'Jueves':
+                                if (horas == '8a-9a') {
+                                    $("#j2").html(nombrecompleto_p);
+                                    $("#j2").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '9a-10a') {
+                                    $("#j3").html(nombrecompleto_p);
+                                    $("#j3").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '10a-11a') {
+                                    $("#j4").html(nombrecompleto_p);
+                                    $("#j4").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '11a-12p') {
+                                    $("#j5").html(nombrecompleto_p);
+                                    $("#j5").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '12p-1p') {
+                                    $("#j6").html(nombrecompleto_p);
+                                    $("#j6").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '1p-2p') {
+                                    $("#j7").html(nombrecompleto_p);
+                                    $("#j7").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '2p-3p') {
+                                    $("#j8").html(nombrecompleto_p);
+                                    $("#j8").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '3p-4p') {
+                                    $("#j9").html(nombrecompleto_p);
+                                    $("#j9").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '4p-5p') {
+                                    $("#j10").html(nombrecompleto_p);
+                                    $("#j10").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '5p-6p') {
+                                    $("#j11").html(nombrecompleto_p);
+                                    $("#j11").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '6p-7p') {
+                                    $("#j12").html(nombrecompleto_p);
+                                    $("#j12").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '7p-8p') {
+                                    $("#j13").html(nombrecompleto_p);
+                                    $("#j13").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                            break;
+                            case 'Viernes':
+                                if (horas == '8a-9a') {
+                                    $("#v2").html(nombrecompleto_p);
+                                    $("#v2").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '9a-10a') {
+                                    $("#v3").html(nombrecompleto_p);
+                                    $("#v3").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '10a-11a') {
+                                    $("#v4").html(nombrecompleto_p);
+                                    $("#v4").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '11a-12p') {
+                                    $("#v5").html(nombrecompleto_p);
+                                    $("#v5").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '12p-1p') {
+                                    $("#v6").html(nombrecompleto_p);
+                                    $("#v6").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '1p-2p') {
+                                    $("#v7").html(nombrecompleto_p);
+                                    $("#v7").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '2p-3p') {
+                                    $("#v8").html(nombrecompleto_p);
+                                    $("#v8").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '3p-4p') {
+                                    $("#v9").html(nombrecompleto_p);
+                                    $("#v9").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '4p-5p') {
+                                    $("#v10").html(nombrecompleto_p);
+                                    $("#v10").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '5p-6p') {
+                                    $("#v11").html(nombrecompleto_p);
+                                    $("#v11").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '6p-7p') {
+                                    $("#v12").html(nombrecompleto_p);
+                                    $("#v12").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '7p-8p') {
+                                    $("#v13").html(nombrecompleto_p);
+                                    $("#v13").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                            break;
+                            case 'Sabado':
+                                if (horas == '8a-9a') {
+                                    $("#s2").html(nombrecompleto_p);
+                                    $("#s2").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '9a-10a') {
+                                    $("#s3").html(nombrecompleto_p);
+                                    $("#s3").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '10a-11a') {
+                                    $("#s4").html(nombrecompleto_p);
+                                    $("#s4").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '11a-12p') {
+                                    $("#s5").html(nombrecompleto_p);
+                                    $("#s5").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '12p-1p') {
+                                    $("#s6").html(nombrecompleto_p);
+                                    $("#s6").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '1p-2p') {
+                                    $("#s7").html(nombrecompleto_p);
+                                    $("#s7").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '2p-3p') {
+                                    $("#s8").html(nombrecompleto_p);
+                                    $("#s8").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '3p-4p') {
+                                    $("#s9").html(nombrecompleto_p);
+                                    $("#s9").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '4p-5p') {
+                                    $("#s10").html(nombrecompleto_p);
+                                    $("#s10").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '5p-6p') {
+                                    $("#s11").html(nombrecompleto_p);
+                                    $("#s11").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '6p-7p') {
+                                    $("#s12").html(nombrecompleto_po);
+                                    $("#s12").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                                if (horas == '7p-8p') {
+                                    $("#s13").html(nombrecompleto_p);
+                                    $("#s13").append('<div align="right"><a href="#"" id="Editar" onclick="EditarHorario('+id_horario+')"><i class="fa fa-pencil"></i></a><a href="#" id="Borrar" onclick="BorrarHorario('+id_horario+')"><i class="md md-close"></i></a></div>');
+                                }
+                            break;
+                        }
+                    }
+                }else{
+
+                    $("#l1").empty();
+                    $("#l2").empty();
+                    $("#l3").empty();
+                    $("#l4").empty();
+                    $("#l5").empty(); 
+                    $("#l6").empty();
+                    $("#l7").empty();
+                    $("#l8").empty();
+                    $("#l9").empty();
+                    $("#l10").empty();
+                    $("#l11").empty();
+                    $("#l12").empty();
+                    $("#l13").empty();
+
+                    $("#ma1").empty();
+                    $("#ma2").empty();
+                    $("#ma3").empty();
+                    $("#ma4").empty();
+                    $("#ma5").empty(); 
+                    $("#ma6").empty();
+                    $("#ma7").empty();
+                    $("#ma8").empty();
+                    $("#ma9").empty();
+                    $("#ma10").empty();
+                    $("#ma11").empty();
+                    $("#ma12").empty();
+                    $("#ma13").empty();
+
+                    $("#mi1").empty();
+                    $("#mi2").empty();
+                    $("#mi3").empty();
+                    $("#mi4").empty();
+                    $("#mi5").empty(); 
+                    $("#mi6").empty();
+                    $("#mi7").empty();
+                    $("#mi8").empty();
+                    $("#mi9").empty();
+                    $("#mi10").empty();
+                    $("#mi11").empty();
+                    $("#mi12").empty();
+                    $("#mi13").empty();
+
+                    $("#j1").empty();
+                    $("#j2").empty();
+                    $("#j3").empty();
+                    $("#j4").empty();
+                    $("#j5").empty(); 
+                    $("#j6").empty();
+                    $("#j7").empty();
+                    $("#j8").empty();
+                    $("#j9").empty();
+                    $("#j10").empty();
+                    $("#j11").empty();
+                    $("#j12").empty();
+                    $("#j13").empty();
+
+                    $("#v1").empty();
+                    $("#v2").empty();
+                    $("#v3").empty();
+                    $("#v4").empty();
+                    $("#v5").empty(); 
+                    $("#v6").empty();
+                    $("#v7").empty();
+                    $("#v8").empty();
+                    $("#v9").empty();
+                    $("#v10").empty();
+                    $("#v11").empty();
+                    $("#v12").empty();
+                    $("#v13").empty();
+
+                    $("#s1").empty();
+                    $("#s2").empty();
+                    $("#s3").empty();
+                    $("#s4").empty();
+                    $("#s5").empty(); 
+                    $("#s6").empty();
+                    $("#s7").empty();
+                    $("#s8").empty();
+                    $("#s9").empty();
+                    $("#s10").empty();
+                    $("#s11").empty();
+                    $("#s12").empty();
+                    $("#s13").empty();
+
+                }           
+            },
+            error:function(){
+                swal("Error","Ha ocurrido un error intentelo de nuevo","error");
+                $("#Calendario").hide();
+            }
+        });
+    }else{
+        swal("Cuidado","Aun quedan campos vacios","warning");
+    }
+}
+
 /* END - CONTROLLER: Citas */
 
 /* =============================================================================================================================================================================================================================== */

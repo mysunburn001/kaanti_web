@@ -222,17 +222,32 @@
                                         <div class="card-box">
                                             <div class="table-responsive">
                                                 <!-- form start -->
-                                              <form role="form" method="POST" id="formHorarios">
+                                              
                                                 <div class="box-body">
                      
                                                     <input type="text" class="form-control" id="id_h" name="id_h" style="display: none">
-                                                    <input type="text" class="form-control" id="id_t" name="id_t" style="display: none">
+                                                    <input type="text" class="form-control" id="Id_A" name="id_t" style="display: none">
                       
                                                     <div class="form-group" id="">
                                                       <label for="Cliente">Nombre del Cliente</label>
                                                       <select id="Cliente" name="Cliente" class="form-control">
-                                                      <option value="" >Elige Cliente</option>
-                                                    
+                                                        <option value="" >Elige Cliente</option>
+                                                        
+                                                        <?php
+                                                        $valores = count($clientes);
+                                                        for ($i=0; $i < $valores ; $i++) { 
+                                                          $res = $clientes[$i];
+                                                          $id = $res -> id_cliente;
+                                                          $nombre = $res -> nombre;
+                                                          $apaterno = $res -> apaterno;
+                                                          $amaterno = $res -> amaterno;
+                                                          $nombrecompleto;
+
+                                                          $nombrecompleto = $nombre . ' ' . $apaterno . ' ' . $amaterno;
+
+                                                          echo "<option value='$id' >$nombrecompleto</option>";
+                                                          }
+                                                          ?>   
                                                       </select>
                                                     </div>
 
@@ -240,7 +255,9 @@
                                    
                                                       <label for="FechaCita">Fecha</label>
                                                       <input type="text" class="form-control" id="FechaCita" placeholder="yyyy/mm/dd" id="datepicker-autoclose">
-                                                      <span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>                  
+                                                      <span class="input-group-addon bg-custom b-0 text-white"><i class="icon-calender"></i></span>      
+                                                      
+                                                    </div>
 
                                                     <div class="form-group" id="divHorario">
                                                       <label for="HoraCita">Elige Horario</label>
@@ -265,14 +282,40 @@
                                                     </div>
 
                                                     <div class="form-group" id="">
-                                                      <label for="Artista">Artista</label>
-                                                      <input type="text" class="form-control" id="Artista" name="Artista" disabled="true">
+                                                      <label for="Producto">Producto</label>
+                                                      <select id="Producto" name="Producto" class="form-control">
+                                                        <option value="" >Elige Producto</option>
+
+                                                        <?php
+                                                          $valores = count($productos);
+                                                          for ($i=0; $i < $valores ; $i++) { 
+                                                            $res = $productos[$i];
+                                                            $id = $res -> id_producto;
+                                                            $nombre = $res -> nombre;
+                                              
+                                                            echo "<option value='$id' >$nombre</option>";
+                                                            }
+                                                            ?> 
+                                                        <option value="Varios" >Varios</option>
+                                                    
+                                                      </select>
                                                     </div>
+
+                                                    <div class="form-group">
+                                                      <label for="Comentarios">Comentarios</label>
+                                                      <textarea rows="4" cols="50" class="form-control" id="Comentarios" placeholder="Comentarios"></textarea>
+        
+                                                    </div>
+
+                                                    <div class="form-group" id="">
+                                                      <label for="NArtista">Artista</label>
+                                                      <input type="text" class="form-control" id="NArtista" name="NArtista" disabled="true">
+                                                    </div>
+                                                    
 
                                                     <input type="button" value="Guardar" id="BotonGuardarCita" class="btn btn-primary" onclick="AgregarCita();"/>
                                                     <input type="button" value="Actualizar" id="BotonEditarCita" class="btn btn-primary" onclick="ActualizaCita();"/>
                                                   </div>   
-                                              </form>
                                             </div>
                                         </div>
                                     </div>

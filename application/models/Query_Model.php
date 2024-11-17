@@ -11,7 +11,21 @@ class Query_Model extends CI_Model{
 
 /* START - CONTROLLER: Citas */
 
+        function ListaArtistasActivas(){
 
+                $this->db->select('*');
+                $this->db->from('usuarios');
+                $this->db->where('rol','E');
+                $this->db->where('estado','1');
+                $query = $this->db->get();
+                return $query->result();
+        }
+
+        function InfoCitas($IdArtista,$FechaIni,$FechaFin,$Año){
+
+                $query = $this->db->query("SELECT citas.dinero,citas.comentarios,citas.hora_cita,citas.dia_cita,citas.asistencia,clientes.nombre as nombre_c,clientes.apaterno as c_paterno,clientes.amaterno as c_materno,usuarios.nombre as nombre_a,usuarios.apaterno as a_paterno,usuarios.amaterno as a_materno FROM citas JOIN clientes on clientes.id_cliente = citas.cliente JOIN usuarios on usuarios.id_usuario = citas.artista WHERE citas.artista = '$IdArtista' AND DATE(citas.fecha_operacion) BETWEEN '$FechaIni' AND '$FechaFin' AND citas.numero_anio = '$Año'");
+                return $query->result();
+        }
 
 /* END - CONTROLLER: Citas */
 
@@ -23,6 +37,15 @@ class Query_Model extends CI_Model{
 
                 $this->db->select('*');
                 $this->db->from('productos');
+                $query = $this->db->get();
+                return $query->result();
+        }
+
+        function ListaProductosActivos(){
+
+                $this->db->select('*');
+                $this->db->from('productos');
+                $this->db->where('estado','1');
                 $query = $this->db->get();
                 return $query->result();
         }
@@ -132,6 +155,15 @@ function ListaClientes(){
 
         $this->db->select('*');
         $this->db->from('clientes');
+        $query = $this->db->get();
+        return $query->result();
+}
+
+function ListaClientesActivos(){
+
+        $this->db->select('*');
+        $this->db->from('clientes');
+        $this->db->where('estado','1');
         $query = $this->db->get();
         return $query->result();
 }
